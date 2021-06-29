@@ -13,7 +13,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @ActiveProfiles({ PROFILE_IT })
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureMockMvc
-public abstract class AbstractIntegrationTest {
+public abstract class AbstractIntegrationTest extends AbstractPostGresContainer {
 
 	@Autowired
 	protected MockMvc mockMvc;

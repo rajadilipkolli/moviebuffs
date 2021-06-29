@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.2.6.RELEASE</version>
+		<version>2.5.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.sivalabs</groupId>
@@ -19,17 +19,16 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<java.version>11</java.version>
-		<spring-cloud.version>Hoxton.SR3</spring-cloud.version>
+		<spring-cloud.version>2020.0.3</spring-cloud.version>
 		<swagger2.version>2.9.2</swagger2.version>
-		<problem-spring-web.version>0.25.2</problem-spring-web.version>
+		<problem-spring-web.version>0.26.2</problem-spring-web.version>
 		<logstash-logback.version>4.9</logstash-logback.version>
-		<commons-io.version>2.6</commons-io.version>
-		<opencsv.version>5.0</opencsv.version>
+		<commons-io.version>2.10.0</commons-io.version>
+		<opencsv.version>5.4</opencsv.version>
 		<jjwt.version>0.6.0</jjwt.version>
 		<heroku.appName>sivalabs-moviebuffs</heroku.appName>
-		<testcontainers.version>1.12.2</testcontainers.version>
+		<testcontainers.version>1.15.3</testcontainers.version>
 		<p6spy.starter.version>1.6.1</p6spy.starter.version>
-		<playtika.testcontainers.version>1.39</playtika.testcontainers.version>
 		<archunit-junit5.version>0.13.1</archunit-junit5.version>
 		<jacoco.minimum.coverage>0.70</jacoco.minimum.coverage>
 		<jacoco.destFile>${project.build.directory}/coverage-reports/aggregate.exec</jacoco.destFile>
@@ -47,9 +46,9 @@
 		</sonar.exclusions>
 		<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 
-		<jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
+		<jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
 		<sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
-		<dependency-check-maven.version>3.3.2</dependency-check-maven.version>
+		<dependency-check-maven.version>6.2.2</dependency-check-maven.version>
 		<heroku-maven-plugin.version>2.0.11</heroku-maven-plugin.version>
 	</properties>
 
@@ -185,22 +184,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.junit.vintage</groupId>
-					<artifactId>junit-vintage-engine</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-engine</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-params</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -213,21 +196,13 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.playtika.testcontainers</groupId>
-			<artifactId>embedded-postgresql</artifactId>
-			<version>${playtika.testcontainers.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>${testcontainers.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>junit-jupiter</artifactId>
-			<version>${testcontainers.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -244,6 +219,13 @@
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
 				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.testcontainers</groupId>
+				<artifactId>testcontainers-bom</artifactId>
+				<version>${testcontainers.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -295,7 +277,7 @@
 			<plugin>
 				<groupId>io.spring.javaformat</groupId>
 				<artifactId>spring-javaformat-maven-plugin</artifactId>
-				<version>0.0.20</version>
+				<version>0.0.28</version>
 				<executions>
 					<execution>
 						<phase>validate</phase>
@@ -342,7 +324,7 @@
 			<plugin>
 				<groupId>com.google.cloud.tools</groupId>
 				<artifactId>jib-maven-plugin</artifactId>
-				<version>2.1.0</version>
+				<version>3.1.1</version>
 				<configuration>
 					<from>
 						<image>openjdk:11-jdk-slim</image>
