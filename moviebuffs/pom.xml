@@ -25,7 +25,7 @@
 		<logstash-logback.version>4.9</logstash-logback.version>
 		<commons-io.version>2.10.0</commons-io.version>
 		<opencsv.version>5.4</opencsv.version>
-		<jjwt.version>0.6.0</jjwt.version>
+		<jjwt.version>0.9.1</jjwt.version>
 		<heroku.appName>sivalabs-moviebuffs</heroku.appName>
 		<testcontainers.version>1.15.3</testcontainers.version>
 		<p6spy.starter.version>1.6.1</p6spy.starter.version>
