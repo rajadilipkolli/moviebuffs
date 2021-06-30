@@ -22,7 +22,7 @@
 		<spring-cloud.version>2020.0.3</spring-cloud.version>
 		<swagger2.version>3.0.0</swagger2.version>
 		<problem-spring-web.version>0.26.2</problem-spring-web.version>
-		<logstash-logback.version>4.9</logstash-logback.version>
+		<logstash-logback.version>6.6</logstash-logback.version>
 		<commons-io.version>2.10.0</commons-io.version>
 		<opencsv.version>5.4</opencsv.version>
 		<jjwt.version>0.6.0</jjwt.version>
