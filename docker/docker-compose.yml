@@ -19,7 +19,7 @@ services:
       APPLICATION_LOGSTASH_HOST: logstash
 
   mb-postgresdb:
-    image: postgres:10.7
+    image: postgres:latest
     container_name: mb-postgresdb
     environment:
       - POSTGRES_USER=siva

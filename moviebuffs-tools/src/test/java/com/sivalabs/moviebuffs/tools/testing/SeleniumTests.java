@@ -12,7 +12,7 @@ import java.util.Random;
 
 public class SeleniumTests {
     private static WebDriver driver = null;
-    private static Random r = new Random();
+    private static final Random r = new Random();
     static Faker faker = new Faker();
     private static final String basePath = "http://localhost:8080";
 
@@ -106,7 +106,7 @@ public class SeleniumTests {
 
     private static void waitFor(int n) {
         try {
-            Thread.sleep(n * 1000);
+            Thread.sleep(n * 1000L);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
