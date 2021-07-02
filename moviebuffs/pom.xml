@@ -28,7 +28,7 @@
 		<jjwt.version>0.9.1</jjwt.version>
 		<heroku.appName>sivalabs-moviebuffs</heroku.appName>
 		<testcontainers.version>1.15.3</testcontainers.version>
-		<p6spy.starter.version>1.6.1</p6spy.starter.version>
+		<p6spy.starter.version>1.7.1</p6spy.starter.version>
 		<archunit-junit5.version>0.19.0</archunit-junit5.version>
 		<jacoco.minimum.coverage>0.70</jacoco.minimum.coverage>
 		<jacoco.destFile>${project.build.directory}/coverage-reports/aggregate.exec</jacoco.destFile>
