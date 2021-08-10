@@ -18,7 +18,7 @@
         <java.version>11</java.version>
         <spring-cloud.version>2020.0.3</spring-cloud.version>
         <commons-io.version>2.11.0</commons-io.version>
-        <opencsv.version>5.5</opencsv.version>
+        <opencsv.version>5.5.1</opencsv.version>
         <testcontainers.version>1.15.3</testcontainers.version>
     </properties>
 
