@@ -24,7 +24,7 @@
 		<problem-spring-web.version>0.26.2</problem-spring-web.version>
 		<logstash-logback.version>6.6</logstash-logback.version>
 		<commons-io.version>2.11.0</commons-io.version>
-		<opencsv.version>5.5</opencsv.version>
+		<opencsv.version>5.5.2</opencsv.version>
 		<jjwt.version>0.9.1</jjwt.version>
 		<heroku.appName>sivalabs-moviebuffs</heroku.appName>
 		<testcontainers.version>1.16.0</testcontainers.version>
