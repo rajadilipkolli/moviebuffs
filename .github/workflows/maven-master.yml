@@ -8,7 +8,7 @@ on:
 jobs:
   test:
     name: Unit & Integration Tests
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
@@ -20,6 +20,7 @@ jobs:
         with:
           java-version: 11
           distribution: 'adopt'
+          cache: 'maven'
 
       - name: Cache SonarCloud packages
         uses: actions/cache@v2.1.6
@@ -27,13 +28,6 @@ jobs:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
-
-      - name: Cache Maven packages
-        uses: actions/cache@v2.1.6
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
 
       - name: Build with Maven
         run: mvn -B clean install -Pfull
@@ -58,12 +52,7 @@ jobs:
         with:
           java-version: 11
           distribution: 'adopt'
-      - name: Cache Maven packages
-        uses: actions/cache@v2.1.6
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
+          cache: 'maven'
       - name: Package with Maven
         run: mvn -B clean install -DskipTests --file pom.xml
         
