@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.5.3</version>
+		<version>2.5.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.sivalabs</groupId>
@@ -24,12 +24,12 @@
 		<problem-spring-web.version>0.26.2</problem-spring-web.version>
 		<logstash-logback.version>6.6</logstash-logback.version>
 		<commons-io.version>2.11.0</commons-io.version>
-		<opencsv.version>5.5</opencsv.version>
+		<opencsv.version>5.5.2</opencsv.version>
 		<jjwt.version>0.9.1</jjwt.version>
 		<heroku.appName>sivalabs-moviebuffs</heroku.appName>
 		<testcontainers.version>1.16.0</testcontainers.version>
 		<p6spy.starter.version>1.7.1</p6spy.starter.version>
-		<archunit-junit5.version>0.20.1</archunit-junit5.version>
+		<archunit-junit5.version>0.21.0</archunit-junit5.version>
 		<jacoco.minimum.coverage>0.70</jacoco.minimum.coverage>
 		<jacoco.destFile>${project.build.directory}/coverage-reports/aggregate.exec</jacoco.destFile>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -333,7 +333,7 @@
 			<plugin>
 				<groupId>com.google.cloud.tools</groupId>
 				<artifactId>jib-maven-plugin</artifactId>
-				<version>3.1.2</version>
+				<version>3.1.4</version>
 				<configuration>
 					<from>
 						<image>openjdk:11-jdk-slim</image>
