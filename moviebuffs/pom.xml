@@ -19,7 +19,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<java.version>11</java.version>
-		<spring-cloud.version>2020.0.3</spring-cloud.version>
+		<spring-cloud.version>2020.0.4</spring-cloud.version>
 		<swagger2.version>3.0.0</swagger2.version>
 		<problem-spring-web.version>0.26.2</problem-spring-web.version>
 		<logstash-logback.version>6.6</logstash-logback.version>
@@ -48,7 +48,7 @@
 
 		<jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
 		<sonar-maven-plugin.version>3.9.0.2155</sonar-maven-plugin.version>
-		<dependency-check-maven.version>6.3.2</dependency-check-maven.version>
+		<dependency-check-maven.version>6.4.1</dependency-check-maven.version>
 		<heroku-maven-plugin.version>3.0.4</heroku-maven-plugin.version>
 	</properties>
 
