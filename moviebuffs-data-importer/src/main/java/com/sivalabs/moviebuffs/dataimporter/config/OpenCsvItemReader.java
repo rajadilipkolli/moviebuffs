@@ -10,11 +10,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class OpenCsvItemReader implements ItemReader<MovieCsvRecord> {
-    private final Resource inputResource;
     private CSVIterator csvIterator;
 
     public OpenCsvItemReader(Resource inputResource, int skipLines) throws IOException, CsvValidationException {
-        this.inputResource = inputResource;
         InputStreamReader inputStreamReader = new InputStreamReader(inputResource.getInputStream());
         CSVReader csvReader = new CSVReader(inputStreamReader);
         csvReader.skip(skipLines);

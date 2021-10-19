@@ -7,7 +7,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -15,7 +14,7 @@ import java.util.List;
 @Setter
 @Getter
 @EqualsAndHashCode(of = { "id" }, callSuper = false)
-public class Role extends BaseEntity implements Serializable {
+public class Role extends BaseEntity {
 
 	@Id
 	@SequenceGenerator(name = "role_id_generator", sequenceName = "role_id_seq", allocationSize = 1)

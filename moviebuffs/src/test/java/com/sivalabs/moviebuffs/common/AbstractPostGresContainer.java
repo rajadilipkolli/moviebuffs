@@ -5,7 +5,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
-public class AbstractPostGresContainer {
+public abstract class AbstractPostGresContainer {
 
 	@Container
 	protected static final PostgreSQLContainer<?> sqlContainer = new PostgreSQLContainer<>("postgres:latest")
@@ -16,7 +16,7 @@ public class AbstractPostGresContainer {
 	}
 
 	@DynamicPropertySource
-	static void setSqlContainer(DynamicPropertyRegistry propertyRegistry) {
+	static void addApplicationProperties(DynamicPropertyRegistry propertyRegistry) {
 		propertyRegistry.add("spring.datasource.url", sqlContainer::getJdbcUrl);
 		propertyRegistry.add("spring.datasource.username", sqlContainer::getUsername);
 		propertyRegistry.add("spring.datasource.password", sqlContainer::getPassword);
