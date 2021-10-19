@@ -2,3 +2,7 @@
 *.iml
 .DS_Store
 /target
+.project
+.classpath
+.settings
+/moviebuffs-data-importer/target/

@@ -8,18 +8,18 @@ import org.testcontainers.junit.jupiter.Container;
 public class AbstractPostGresContainer {
 
 	@Container
-	protected static final PostgreSQLContainer<?> sqlContainer = new PostgreSQLContainer<>("postgres:latest")
+	protected static final PostgreSQLContainer<?> POSTGRE_SQL_CONTAINER = new PostgreSQLContainer<>("postgres:latest")
 			.withDatabaseName("integration-tests-db").withUsername("username").withPassword("password");
 
 	static {
-		sqlContainer.start();
+		POSTGRE_SQL_CONTAINER.start();
 	}
 
 	@DynamicPropertySource
-	static void setSqlContainer(DynamicPropertyRegistry propertyRegistry) {
-		propertyRegistry.add("spring.datasource.url", sqlContainer::getJdbcUrl);
-		propertyRegistry.add("spring.datasource.username", sqlContainer::getUsername);
-		propertyRegistry.add("spring.datasource.password", sqlContainer::getPassword);
+	static void setPostgreSqlContainer(DynamicPropertyRegistry propertyRegistry) {
+		propertyRegistry.add("spring.datasource.url", POSTGRE_SQL_CONTAINER::getJdbcUrl);
+		propertyRegistry.add("spring.datasource.username", POSTGRE_SQL_CONTAINER::getUsername);
+		propertyRegistry.add("spring.datasource.password", POSTGRE_SQL_CONTAINER::getPassword);
 	}
 
 }
