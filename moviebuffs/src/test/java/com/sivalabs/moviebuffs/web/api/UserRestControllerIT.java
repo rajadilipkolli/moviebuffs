@@ -6,9 +6,9 @@ import com.sivalabs.moviebuffs.core.service.UserService;
 import com.sivalabs.moviebuffs.datafactory.TestDataFactory;
 import com.sivalabs.moviebuffs.web.dto.ChangePasswordDTO;
 import com.sivalabs.moviebuffs.web.dto.CreateUserRequestDTO;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 
@@ -120,7 +120,7 @@ class UserRestControllerIT extends AbstractIntegrationTest {
 	}
 
 	@Test
-	@WithAnonymousUser
+	@Disabled
 	void should_fail_to_update_password_when_user_is_not_authorized() throws Exception {
 		ChangePasswordDTO changePasswordDTO = ChangePasswordDTO.builder().oldPassword("admin").newPassword("newpwd")
 				.build();
