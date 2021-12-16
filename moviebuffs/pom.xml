@@ -19,7 +19,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<java.version>11</java.version>
-		<spring-cloud.version>2020.0.5</spring-cloud.version>
+		<spring-cloud.version>2021.0.0</spring-cloud.version>
 		<swagger2.version>3.0.0</swagger2.version>
 		<problem-spring-web.version>0.27.0</problem-spring-web.version>
 		<logstash-logback.version>7.0.1</logstash-logback.version>
