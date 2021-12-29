@@ -329,7 +329,7 @@
 						<image>openjdk:17-jdk-slim</image>
 					</from>
 					<to>
-						<image>sivaprasadreddy/moviebuffs</image>
+						<image>rajadileepkolli/moviebuffs</image>
 						<tags>
 							<tag>${project.version}</tag>
 						</tags>
