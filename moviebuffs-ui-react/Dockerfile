@@ -1,7 +1,12 @@
-FROM node:17.3.0-alpine as build
+FROM node:16.13.1-alpine as build
 
 WORKDIR /app
-COPY package.json package-lock.json ./
+
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+COPY package*.json ./
+
 RUN npm install
 COPY . ./
 COPY deployments/config.docker.js ./src/config/config.js
