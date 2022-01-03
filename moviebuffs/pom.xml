@@ -47,7 +47,7 @@
 
 		<jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
 		<sonar-maven-plugin.version>3.9.1.2184</sonar-maven-plugin.version>
-		<dependency-check-maven.version>6.5.1</dependency-check-maven.version>
+		<dependency-check-maven.version>6.5.2</dependency-check-maven.version>
 		<heroku-maven-plugin.version>3.0.4</heroku-maven-plugin.version>
 	</properties>
 
