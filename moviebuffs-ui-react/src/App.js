@@ -1,5 +1,5 @@
 import React from "react";
-import {Redirect, Route, Switch} from "react-router-dom";
+import {Redirect, Route, Routes} from "react-router-dom";
 import NavBar from "./components/NavBar";
 import Login from "./components/Login";
 import ProductsContainer from "./containers/ProductsContainer";
@@ -15,21 +15,31 @@ class App extends React.Component {
       <div className="App">
         <NavBar />
         <main role="main" className="container-fluid">
-          <Switch>
-            <Route path="/login" component={Login} />
+          <Routes>
+            <Route path="/login">
+              <Login/>
+            </Route>
             <Route exact path="/">
                <Redirect to="/products" />
             </Route>
-            <Route path="/products" render={(props) => (
+            {/* <Route path="/products" render={(props) => (
                 <ProductsContainer key={props.location.search} {...props} />)
-            } />
-            <Route exact path="/products/:id" component={ProductContainer} />
-            <Route path="/genres" render={(props) => (
+            } /> */}
+            <Route path="/products" children={<ProductContainer />} />
+            <Route exact path="/products/:id">
+              <ProductContainer/>
+            </Route>
+            {/* <Route path="/genres" render={(props) => (
                 <ProductsByGenreContainer key={props.location.search} {...props} />)
-            } />
-            <Route path="/cart" component={CartContainer} />
-            <Route path="/orderconfirmation/:orderId" component={OrderConfirmation} />
-          </Switch>
+            } /> */}
+            <Route path="/genres" children = {<ProductsByGenreContainer/>} />
+            <Route path="/cart">
+              <CartContainer/>
+            </Route>
+            <Route path="/orderconfirmation/:orderId">
+                <OrderConfirmation/>
+            </Route>
+          </Routes>
         </main>
           <footer className="footer mt-auto py-3 text-center">
               <div className="container">
