@@ -28,7 +28,7 @@
 		<heroku.appName>sivalabs-moviebuffs</heroku.appName>
 		<testcontainers.version>1.16.3</testcontainers.version>
 		<p6spy.starter.version>1.8.0</p6spy.starter.version>
-		<archunit-junit5.version>0.22.0</archunit-junit5.version>
+		<archunit-junit5.version>0.23.0</archunit-junit5.version>
 		<jacoco.minimum.coverage>0.70</jacoco.minimum.coverage>
 		<jacoco.destFile>${project.build.directory}/coverage-reports/aggregate.exec</jacoco.destFile>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
