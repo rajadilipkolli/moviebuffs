@@ -2,7 +2,8 @@
 # Please adjust to your needs (see https://www.gitpod.io/docs/config-gitpod-file)
 # and commit this file to your remote git repository to share the goodness with others.
 
-image: gitpod/workspace-java-17
+image:
+  file: .gitpod.dockerfile
 
 tasks:
   - init: ./mvnw install -DskipTests=false
@@ -18,9 +19,7 @@ ports:
     visibility: private
   - port: 5000
     visibility: private
-  - port: 9200
-    visibility: public
-  - port: 9300
-    visibility: public
+  - port: 9000-9999
+    onOpen: ignore
   - port: 18080
-    visibility: private
+    onOpen: open-browser
