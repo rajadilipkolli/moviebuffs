@@ -7,5 +7,5 @@ image: gitpod/workspace-java-17
 tasks:
   - init: ./mvnw install -DskipTests=false
 
-workspaceLocation: "."
+workspaceLocation: "./moviebuffs"
 
