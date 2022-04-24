@@ -9,3 +9,18 @@ tasks:
 
 workspaceLocation: "./moviebuffs"
 
+ports:
+  - port: 3000
+    visibility: private
+  - port: 9000
+    visibility: private
+  - port: 5432
+    visibility: private
+  - port: 5000
+    visibility: private
+  - port: 9200
+    visibility: public
+  - port: 9300
+    visibility: public
+  - port: 18080
+    visibility: private
