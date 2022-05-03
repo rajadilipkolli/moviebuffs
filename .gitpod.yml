@@ -6,19 +6,23 @@ image:
   file: .gitpod.dockerfile
 
 tasks:
-  - init: ./mvnw install -DskipTests=false
+  - before: sdk install mvnd
+    init: mvnd install -DskipTests=false -Pfull
 
 workspaceLocation: "./moviebuffs"
+
+vscode:
+  extensions:
+    - pivotal.vscode-boot-dev-pack
+    - vscjava.vscode-java-pack
 
 ports:
   - port: 3000
     visibility: private
-  - port: 9000
-    visibility: private
   - port: 5432
     visibility: private
   - port: 5000
-    visibility: private
+    visibility: public
   - port: 9000-9999
     onOpen: ignore
   - port: 18080
