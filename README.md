@@ -1,5 +1,7 @@
 # MovieBuffs
 
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/rajadileepkolli/moviebuffs)
+
 ## Backend Tech Stack
 * Java
 * SpringBoot 2.x
