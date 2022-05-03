@@ -57,7 +57,7 @@ jobs:
         run: mvn -B clean install -DskipTests --file pom.xml
         
       - name: Publish to Registry
-        uses: elgohr/Publish-Docker-Github-Action@master
+        uses: elgohr/Publish-Docker-Github-Action@v4
         with:
           name: dockertmt/moviebuffs
           username: ${{ secrets.DOCKER_USER }}
