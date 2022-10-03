@@ -5,7 +5,7 @@
   "dependencies": {
     "@popperjs/core": "2.11.6",
     "axios": "0.27.2",
-    "bootstrap": "5.2.1",
+    "bootstrap": "5.2.2",
     "history": "5.3.0",
     "jquery": "3.6.1",
     "popper.js": "1.16.1",
