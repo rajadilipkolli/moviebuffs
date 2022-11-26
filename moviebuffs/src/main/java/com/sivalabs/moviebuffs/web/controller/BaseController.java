@@ -2,7 +2,7 @@ package com.sivalabs.moviebuffs.web.controller;
 
 import com.sivalabs.moviebuffs.web.dto.Cart;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class BaseController {
 

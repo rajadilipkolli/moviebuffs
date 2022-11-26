@@ -4,7 +4,7 @@
 
 ## Backend Tech Stack
 * Java
-* SpringBoot 2.x
+* SpringBoot 3.x
 * H2(Dev) / Postgres (Prod)
 * Spring Data JPA
 * Spring Security JWT Authentication

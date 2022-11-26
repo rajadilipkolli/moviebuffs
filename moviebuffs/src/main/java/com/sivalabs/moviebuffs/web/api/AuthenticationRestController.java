@@ -1,6 +1,6 @@
 package com.sivalabs.moviebuffs.web.api;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import com.sivalabs.moviebuffs.config.security.SecurityConfigProperties;
 import com.sivalabs.moviebuffs.config.security.TokenHelper;

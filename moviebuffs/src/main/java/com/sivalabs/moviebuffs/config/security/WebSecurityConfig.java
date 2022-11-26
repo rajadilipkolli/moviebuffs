@@ -7,12 +7,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.SecurityBuilder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,7 +22,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true, proxyTargetClass = true)
+@EnableMethodSecurity(securedEnabled = true, prePostEnabled = true, proxyTargetClass = true)
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
@@ -37,7 +38,7 @@ public class WebSecurityConfig {
 	@Configuration
 	@Order(1)
 	@RequiredArgsConstructor
-	public static class ApiWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
+	public static class ApiWebSecurityConfiguration implements WebSecurityConfigurer {
 
 		private final UserDetailsService userDetailsService;
 
@@ -69,10 +70,22 @@ public class WebSecurityConfig {
 			;
 		}
 
+		@Override
+		public void init(SecurityBuilder builder) throws Exception {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void configure(SecurityBuilder builder) throws Exception {
+			// TODO Auto-generated method stub
+
+		}
+
 	}
 
 	@Configuration
-	public static class FormLoginWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
+	public static class FormLoginWebSecurityConfigurer implements WebSecurityConfigurer {
 
 		@Override
 		public void configure(WebSecurity web) {
@@ -88,6 +101,18 @@ public class WebSecurityConfig {
 					// .anyRequest().authenticated()
 					.and().formLogin().loginPage("/login").defaultSuccessUrl("/").failureUrl("/login?error").permitAll()
 					.and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll();
+		}
+
+		@Override
+		public void init(SecurityBuilder builder) throws Exception {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void configure(SecurityBuilder builder) throws Exception {
+			// TODO Auto-generated method stub
+
 		}
 
 	}
