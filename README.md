@@ -1,6 +1,6 @@
 # MovieBuffs
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/rajadileepkolli/moviebuffs)
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/rajadilipkolli/moviebuffs)
 
 ## Backend Tech Stack
 * Java

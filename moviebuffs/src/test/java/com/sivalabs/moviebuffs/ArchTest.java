@@ -31,9 +31,10 @@ class ArchTest {
 
 	@Test
 	void shouldFollowLayeredArchitecture() {
-		layeredArchitecture().consideringOnlyDependenciesInLayers().layer("Config").definedBy("..config..").layer("Jobs").definedBy("..jobs..")
-				.layer("Importer").definedBy("..importer..").layer("Web").definedBy("..web..").layer("Service")
-				.definedBy("..service..").layer("Persistence").definedBy("..repository..")
+		layeredArchitecture().consideringOnlyDependenciesInLayers().layer("Config").definedBy("..config..")
+				.layer("Jobs").definedBy("..jobs..").layer("Importer").definedBy("..importer..").layer("Web")
+				.definedBy("..web..").layer("Service").definedBy("..service..").layer("Persistence")
+				.definedBy("..repository..")
 
 				.whereLayer("Web").mayNotBeAccessedByAnyLayer().whereLayer("Service")
 				.mayOnlyBeAccessedByLayers("Config", "Importer", "Jobs", "Web").whereLayer("Persistence")
