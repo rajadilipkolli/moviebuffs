@@ -6,17 +6,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.SecurityBuilder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -38,24 +36,26 @@ public class WebSecurityConfig {
 	@Configuration
 	@Order(1)
 	@RequiredArgsConstructor
-	public static class ApiWebSecurityConfiguration implements WebSecurityConfigurer {
+	public static class ApiWebSecurityConfiguration {
 
 		private final UserDetailsService userDetailsService;
 
 		private final TokenHelper tokenHelper;
 
-		@Bean
-		@Override
-		public AuthenticationManager authenticationManagerBean() throws Exception {
-			return super.authenticationManagerBean();
-		}
+		// @Bean
+		// @Override
+		// public AuthenticationManager authenticationManagerBean() throws Exception {
+		// return super.authenticationManagerBean();
+		// }
 
-		@Override
-		protected void configure(HttpSecurity http) throws Exception {
-			http.antMatcher("/api/**").sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-					.authorizeRequests().antMatchers("/api/auth/**").permitAll()
-					.antMatchers(HttpMethod.POST, "/api/users/change-password").authenticated()
-					.antMatchers("/api/users/**").permitAll()
+		@Bean
+		public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+			http
+					// antMatcher("/api/**")
+					.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+					.authorizeHttpRequests().requestMatchers("/api/auth/**").permitAll()
+					.requestMatchers(HttpMethod.POST, "/api/users/change-password").authenticated()
+					.requestMatchers("/api/users/**").permitAll()
 					// .antMatchers(HttpMethod.POST,"/users").hasAnyRole("USER", "ADMIN")
 					// .anyRequest().authenticated()
 					.and().addFilterBefore(new TokenAuthenticationFilter(tokenHelper, userDetailsService),
@@ -68,51 +68,29 @@ public class WebSecurityConfig {
 																		// to same origin
 																		// urls
 			;
-		}
-
-		@Override
-		public void init(SecurityBuilder builder) throws Exception {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void configure(SecurityBuilder builder) throws Exception {
-			// TODO Auto-generated method stub
-
+			return http.build();
 		}
 
 	}
 
 	@Configuration
-	public static class FormLoginWebSecurityConfigurer implements WebSecurityConfigurer {
+	public static class FormLoginWebSecurityConfigurer {
 
-		@Override
-		public void configure(WebSecurity web) {
-			web.ignoring().antMatchers("/static/**", "/js/**", "/css/**", "/images/**", "/favicon.ico",
-					"/h2-console/**");
+		@Bean
+		public WebSecurityCustomizer webSecurityCustomizer() {
+			return (web) -> web.ignoring().requestMatchers("/static/**", "/js/**", "/css/**", "/images/**",
+					"/favicon.ico", "/h2-console/**");
 		}
 
-		@Override
-		protected void configure(HttpSecurity http) throws Exception {
-			http.csrf().disable().authorizeRequests().antMatchers("/resources/**", "/webjars/**").permitAll()
-					.antMatchers("/registration", "/forgot-password", "/reset-password").permitAll()
-					.antMatchers("/h2-console/**").permitAll()
+		@Bean
+		public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+			http.csrf().disable().authorizeHttpRequests().requestMatchers("/resources/**", "/webjars/**").permitAll()
+					.requestMatchers("/registration", "/forgot-password", "/reset-password").permitAll()
+					.requestMatchers("/h2-console/**").permitAll()
 					// .anyRequest().authenticated()
 					.and().formLogin().loginPage("/login").defaultSuccessUrl("/").failureUrl("/login?error").permitAll()
 					.and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll();
-		}
-
-		@Override
-		public void init(SecurityBuilder builder) throws Exception {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void configure(SecurityBuilder builder) throws Exception {
-			// TODO Auto-generated method stub
-
+			return http.build();
 		}
 
 	}
