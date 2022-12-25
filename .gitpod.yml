@@ -27,12 +27,15 @@ vscode:
 
 ports:
   - port: 3000
-    visibility: private
+    visibility: public
   - port: 5432
     visibility: private
   - port: 5000
     visibility: public
+  - port: 5601
+    visibility: public
   - port: 9000-9999
     onOpen: ignore
   - port: 18080
+    visibility: public
     onOpen: open-browser
