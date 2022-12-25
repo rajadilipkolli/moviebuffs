@@ -11,9 +11,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.sivalabs</groupId>
-	<artifactId>moviebuffs</artifactId>
+	<artifactId>moviebuffs-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>moviebuffs</name>
+	<name>moviebuffs-service</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

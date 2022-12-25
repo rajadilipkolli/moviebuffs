@@ -10,7 +10,6 @@
 * Spring Security JWT Authentication
 * Jasypt
 * Swagger2
-* Zalando problem-spring-web
 * Flyway
 * SonarQube
 * Jacoco
