@@ -34,7 +34,7 @@ jobs:
 
       - name: SonarCloud Scan
         run: ./mvnw -B sonar:sonar -Psonar -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-        working-directory: ./moviebuffs
+        working-directory: ./moviebuffs-service
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
