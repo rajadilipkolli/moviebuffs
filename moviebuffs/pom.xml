@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.7</version>
+		<version>3.0.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.sivalabs</groupId>
@@ -19,12 +19,11 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<java.version>17</java.version>
-		<spring-cloud.version>2021.0.5</spring-cloud.version>
-		<problem-spring-web.version>0.27.0</problem-spring-web.version>
+		<spring-cloud.version>2022.0.0</spring-cloud.version>
 		<logstash-logback.version>7.2</logstash-logback.version>
 		<commons-io.version>2.11.0</commons-io.version>
 		<opencsv.version>5.7.1</opencsv.version>
-		<jjwt.version>0.9.1</jjwt.version>
+		<jjwt.version>0.11.5</jjwt.version>
 		<heroku.appName>sivalabs-moviebuffs</heroku.appName>
 		<testcontainers.version>1.17.6</testcontainers.version>
 		<p6spy.starter.version>1.8.1</p6spy.starter.version>
@@ -32,8 +31,8 @@
 		<jacoco.minimum.coverage>0.70</jacoco.minimum.coverage>
 		<jacoco.destFile>${project.build.directory}/coverage-reports/aggregate.exec</jacoco.destFile>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
-		<sonar.organization>rajadileepkolli</sonar.organization>
-		<sonar.projectKey>rajadileepkolli_moviebuffs</sonar.projectKey>
+		<sonar.organization>rajadilipkolli</sonar.organization>
+		<sonar.projectKey>rajadilipkolli_moviebuffs</sonar.projectKey>
 		<sonar.exclusions>
 			src/main/java/**/config/**/*.*,
 			src/main/java/**/entity/*.*,
@@ -116,11 +115,15 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.thymeleaf.extras</groupId>
-			<artifactId>thymeleaf-extras-springsecurity5</artifactId>
+			<artifactId>thymeleaf-extras-springsecurity6</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>nz.net.ultraq.thymeleaf</groupId>
@@ -128,8 +131,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>1.6.14</version>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.0.2</version>
 		</dependency>
 
 		<dependency>
@@ -138,13 +141,20 @@
 		</dependency>
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt</artifactId>
+			<artifactId>jjwt-api</artifactId>
 			<version>${jjwt.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.zalando</groupId>
-			<artifactId>problem-spring-web-starter</artifactId>
-			<version>${problem-spring-web.version}</version>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>${jjwt.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>${jjwt.version}</version>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.logstash.logback</groupId>
@@ -245,8 +255,8 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>pl.project13.maven</groupId>
-				<artifactId>git-commit-id-plugin</artifactId>
+				<groupId>io.github.git-commit-id</groupId>
+				<artifactId>git-commit-id-maven-plugin</artifactId>
 				<executions>
 					<execution>
 						<goals>
@@ -458,11 +468,15 @@
 
 	<repositories>
 		<repository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
+		  <id>spring-milestones</id>
+		  <name>Spring Milestones</name>
+		  <url>https://repo.spring.io/milestone</url>
+		  <snapshots>
+			<enabled>false</enabled>
+		  </snapshots>
 		</repository>
 	</repositories>
+	
 
 	<profiles>
 		<profile>
@@ -517,5 +531,5 @@
 			</build>
 		</profile>
 	</profiles>
-
+	
 </project>

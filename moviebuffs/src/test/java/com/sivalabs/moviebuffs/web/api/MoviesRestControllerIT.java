@@ -3,12 +3,14 @@ package com.sivalabs.moviebuffs.web.api;
 import com.sivalabs.moviebuffs.common.AbstractIntegrationTest;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import static com.sivalabs.moviebuffs.common.TestConstants.MOVIES_COLLECTION_BASE_PATH;
 import static com.sivalabs.moviebuffs.common.TestConstants.MOVIES_SINGLE_BASE_PATH;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@WithMockUser
 class MoviesRestControllerIT extends AbstractIntegrationTest {
 
 	@Test

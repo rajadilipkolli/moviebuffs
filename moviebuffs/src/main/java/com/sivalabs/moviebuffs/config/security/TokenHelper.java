@@ -7,7 +7,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Date;
 
 @Component
@@ -20,7 +23,7 @@ public class TokenHelper {
 
 	private static final String AUDIENCE_WEB = "web";
 
-	private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
+	private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
 
 	public String getUsernameFromToken(String token) {
 		String username;
@@ -56,7 +59,10 @@ public class TokenHelper {
 	public String generateToken(String username) {
 		return Jwts.builder().setIssuer(securityConfigProperties.getJwt().getIssuer()).setSubject(username)
 				.setAudience(AUDIENCE_WEB).setIssuedAt(timeProvider.now()).setExpiration(generateExpirationDate())
-				.signWith(SIGNATURE_ALGORITHM, securityConfigProperties.getJwt().getSecret()).compact();
+				.signWith(SIGNATURE_ALGORITHM,
+						Base64.getEncoder().encodeToString(
+								securityConfigProperties.getJwt().getSecret().getBytes(StandardCharsets.UTF_8)))
+				.compact();
 	}
 
 	private Claims getAllClaimsFromToken(String token) {
