@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - 'master'
+    paths:
+      - "moviebuffs-data-importer/**"
+      - "moviebuffs-gatling-tests/**"
+      - "moviebuffs-service/**"
+      - "moviebuffs-tools/**"
 
 jobs:
   test:
