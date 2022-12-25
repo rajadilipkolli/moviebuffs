@@ -8,20 +8,19 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true, proxyTargetClass = true)
+@EnableMethodSecurity(securedEnabled = true, proxyTargetClass = true)
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
@@ -37,57 +36,57 @@ public class WebSecurityConfig {
 	@Configuration
 	@Order(1)
 	@RequiredArgsConstructor
-	public static class ApiWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
+	public static class ApiWebSecurityConfiguration {
 
 		private final UserDetailsService userDetailsService;
+
+		private final PasswordEncoder passwordEncoder;
 
 		private final TokenHelper tokenHelper;
 
 		@Bean
-		@Override
-		public AuthenticationManager authenticationManagerBean() throws Exception {
-			return super.authenticationManagerBean();
+		public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+			AuthenticationManagerBuilder authenticationManagerBuilder = http
+					.getSharedObject(AuthenticationManagerBuilder.class);
+			authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+			return authenticationManagerBuilder.build();
 		}
 
-		@Override
-		protected void configure(HttpSecurity http) throws Exception {
-			http.antMatcher("/api/**").sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-					.authorizeRequests().antMatchers("/api/auth/**").permitAll()
-					.antMatchers(HttpMethod.POST, "/api/users/change-password").authenticated()
-					.antMatchers("/api/users/**").permitAll()
+		@Bean
+		public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+			http
+					// .antMatcher("/api/**")
+					.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+					.authorizeHttpRequests().requestMatchers("/api/auth/**").permitAll()
+					.requestMatchers(HttpMethod.POST, "/api/users/change-password").authenticated()
+					.requestMatchers("/api/users/**").permitAll()
 					// .antMatchers(HttpMethod.POST,"/users").hasAnyRole("USER", "ADMIN")
-					// .anyRequest().authenticated()
-					.and().addFilterBefore(new TokenAuthenticationFilter(tokenHelper, userDetailsService),
+					.anyRequest().authenticated().and()
+					.addFilterBefore(new TokenAuthenticationFilter(tokenHelper, userDetailsService),
 							BasicAuthenticationFilter.class);
 
-			http.csrf()
-					// .ignoringAntMatchers("/h2-console/**")//don't apply CSRF protection
-					// to /h2-console
-					.disable().headers().frameOptions().sameOrigin() // allow use of frame
-																		// to same origin
-																		// urls
-			;
+			http.csrf().ignoringRequestMatchers("/h2-console/**")
+					// don't apply CSRF protection to /h2-console
+					.disable().headers().frameOptions().sameOrigin();
+			// allow use of frame to same origin urls
+			return http.build();
 		}
 
 	}
 
 	@Configuration
-	public static class FormLoginWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
+	public static class FormLoginWebSecurityConfiguration {
 
-		@Override
-		public void configure(WebSecurity web) {
-			web.ignoring().antMatchers("/static/**", "/js/**", "/css/**", "/images/**", "/favicon.ico",
-					"/h2-console/**");
-		}
-
-		@Override
-		protected void configure(HttpSecurity http) throws Exception {
-			http.csrf().disable().authorizeRequests().antMatchers("/resources/**", "/webjars/**").permitAll()
-					.antMatchers("/registration", "/forgot-password", "/reset-password").permitAll()
-					.antMatchers("/h2-console/**").permitAll()
+		@Bean
+		public SecurityFilterChain formFilterChain(HttpSecurity http) throws Exception {
+			http.csrf().disable().authorizeHttpRequests().requestMatchers("/resources/**", "/webjars/**").permitAll()
+					.requestMatchers("/registration", "/forgot-password", "/reset-password").permitAll()
+					.requestMatchers("/static/**", "/js/**", "/css/**", "/images/**", "/favicon.ico", "/h2-console/**")
+					.permitAll()
 					// .anyRequest().authenticated()
 					.and().formLogin().loginPage("/login").defaultSuccessUrl("/").failureUrl("/login?error").permitAll()
 					.and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll();
+			return http.build();
 		}
 
 	}

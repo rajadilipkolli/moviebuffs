@@ -25,6 +25,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.doNothing;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -86,7 +87,7 @@ class OrderRestControllerTest extends AbstractMvcUnitTest {
 
 		this.mockMvc
 				.perform(post(ORDERS_COLLECTION_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
-						.content(objectMapper.writeValueAsString(order)))
+						.content(objectMapper.writeValueAsString(order)).with(csrf()))
 				.andExpect(status().isCreated()).andExpect(jsonPath("$.orderId", is(orderConfirmationDTO.getOrderId())))
 				.andExpect(jsonPath("$.orderStatus", is(orderConfirmationDTO.getOrderStatus().name())));
 
@@ -101,7 +102,7 @@ class OrderRestControllerTest extends AbstractMvcUnitTest {
 		given(securityService.isCurrentUserHasPrivilege(anyLong())).willReturn(true);
 		doNothing().when(orderService).cancelOrder(orderId);
 
-		this.mockMvc.perform(delete(ORDERS_SINGLE_BASE_PATH, orderId)).andExpect(status().isOk());
+		this.mockMvc.perform(delete(ORDERS_SINGLE_BASE_PATH, orderId).with(csrf())).andExpect(status().isOk());
 	}
 
 	@Test
@@ -113,7 +114,8 @@ class OrderRestControllerTest extends AbstractMvcUnitTest {
 		given(securityService.isCurrentUserHasPrivilege(anyLong())).willReturn(true);
 		willThrow(BadRequestException.class).given(orderService).cancelOrder(order.getOrderId());
 
-		this.mockMvc.perform(delete(ORDERS_SINGLE_BASE_PATH, order.getOrderId())).andExpect(status().isBadRequest());
+		this.mockMvc.perform(delete(ORDERS_SINGLE_BASE_PATH, order.getOrderId()).with(csrf()))
+				.andExpect(status().isBadRequest());
 	}
 
 	@Test
@@ -125,7 +127,8 @@ class OrderRestControllerTest extends AbstractMvcUnitTest {
 		given(securityService.isCurrentUserHasPrivilege(anyLong())).willReturn(false);
 		// willThrow(BadRequestException.class).given(orderService).cancelOrder(order.getOrderId());
 
-		this.mockMvc.perform(delete(ORDERS_SINGLE_BASE_PATH, order.getOrderId())).andExpect(status().isBadRequest());
+		this.mockMvc.perform(delete(ORDERS_SINGLE_BASE_PATH, order.getOrderId()).with(csrf()))
+				.andExpect(status().isBadRequest());
 	}
 
 	@Test
@@ -134,7 +137,7 @@ class OrderRestControllerTest extends AbstractMvcUnitTest {
 		String orderId = "1234";
 		given(orderService.findOrderByOrderId(orderId)).willReturn(Optional.empty());
 
-		this.mockMvc.perform(delete(ORDERS_SINGLE_BASE_PATH, orderId)).andExpect(status().isNotFound());
+		this.mockMvc.perform(delete(ORDERS_SINGLE_BASE_PATH, orderId).with(csrf())).andExpect(status().isNotFound());
 	}
 
 }

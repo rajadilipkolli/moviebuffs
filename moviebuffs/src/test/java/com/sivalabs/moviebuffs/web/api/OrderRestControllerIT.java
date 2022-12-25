@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
-import org.zalando.problem.jackson.ProblemModule;
-import org.zalando.problem.violations.ConstraintViolationProblemModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +32,6 @@ class OrderRestControllerIT extends AbstractIntegrationTest {
 
 	@BeforeEach
 	void setUp() {
-		objectMapper.registerModule(new ProblemModule());
-		objectMapper.registerModule(new ConstraintViolationProblemModule());
-
 		orderList = new ArrayList<>();
 		orderList.add(createOrder(1L));
 		orderList.add(createOrder(2L));
