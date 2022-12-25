@@ -54,7 +54,7 @@ jobs:
           distribution: 'adopt'
           cache: 'maven'
       - name: Package with Maven
-        run: mvn -B clean install -DskipTests --file pom.xml
+        run: ./mvnw -B clean install -DskipTests --file pom.xml
         
       - name: Publish to Registry
         uses: elgohr/Publish-Docker-Github-Action@v5
@@ -62,7 +62,7 @@ jobs:
           name: dockertmt/moviebuffs
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASS }}
-          workdir: ./moviebuffs
+          workdir: ./moviebuffs-service
           default_branch: master
           tags: "latest"
           buildoptions: "--compress --force-rm"
