@@ -23,11 +23,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 	public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 
-		String username;
 		String authToken = tokenHelper.getToken(request);
 
 		if (authToken != null) {
-			username = tokenHelper.getUsernameFromToken(authToken);
+			String username = tokenHelper.getUsernameFromToken(authToken);
 			if (username != null) {
 				UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 				if (tokenHelper.validateToken(authToken, userDetails)) {

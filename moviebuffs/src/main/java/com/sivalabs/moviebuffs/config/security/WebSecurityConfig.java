@@ -6,11 +6,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,7 +20,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(securedEnabled = true, prePostEnabled = true, proxyTargetClass = true)
+@EnableMethodSecurity(securedEnabled = true, proxyTargetClass = true)
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
@@ -31,6 +31,13 @@ public class WebSecurityConfig {
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+	}
+
+	@Bean
+	public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+		AuthenticationManagerBuilder authenticationManagerBuilder = http
+				.getSharedObject(AuthenticationManagerBuilder.class);
+		return authenticationManagerBuilder.build();
 	}
 
 	@Configuration
@@ -58,10 +65,8 @@ public class WebSecurityConfig {
 			http.csrf()
 					// .ignoringAntMatchers("/h2-console/**")//don't apply CSRF protection
 					// to /h2-console
-					.disable().headers().frameOptions().sameOrigin() // allow use of frame
-																		// to same origin
-																		// urls
-			;
+					.disable().headers().frameOptions().sameOrigin();
+			// allow use of frame to same origin urls
 			return http.build();
 		}
 
@@ -71,16 +76,11 @@ public class WebSecurityConfig {
 	public static class FormLoginWebSecurityConfiguration {
 
 		@Bean
-		public WebSecurityCustomizer webSecurityCustomizer() {
-			return (web) -> web.ignoring().requestMatchers("/static/**", "/js/**", "/css/**", "/images/**",
-					"/favicon.ico", "/h2-console/**");
-		}
-
-		@Bean
-		public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		public SecurityFilterChain formFilterChain(HttpSecurity http) throws Exception {
 			http.csrf().disable().authorizeHttpRequests().requestMatchers("/resources/**", "/webjars/**").permitAll()
 					.requestMatchers("/registration", "/forgot-password", "/reset-password").permitAll()
-					.requestMatchers("/h2-console/**").permitAll()
+					.requestMatchers("/static/**", "/js/**", "/css/**", "/images/**", "/favicon.ico", "/h2-console/**")
+					.permitAll()
 					// .anyRequest().authenticated()
 					.and().formLogin().loginPage("/login").defaultSuccessUrl("/").failureUrl("/login?error").permitAll()
 					.and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll();
