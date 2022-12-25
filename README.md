@@ -23,6 +23,14 @@
 * Axios
 * Font-awesome
 
+## Notes for Upgrading to SpringBoot 3
+* Migration of namespace from javax to jakarta
+* Migration of security to not use SpringWebConfigureAdaptor
+* Migration of Spring Batch to latest framework
+* JWT token generation is dependent on xml, hence moving to latest versions and fixing it
+* Migration of springdoc-openapi-ui to springdoc-openapi-starter-webmvc-ui
+* Removing zalando-problem-web dependency & use OOTB ProblemWeb support
+
 ## How to run?
 
 ### Run Backend tests
