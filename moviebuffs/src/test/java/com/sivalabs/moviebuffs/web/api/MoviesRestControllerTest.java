@@ -10,6 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -31,6 +32,7 @@ class MoviesRestControllerTest extends AbstractMvcUnitTest {
 	private MovieDTOMapper movieDTOMapper;
 
 	@Test
+	@WithMockUser
 	void should_return_movies() throws Exception {
 		Page<Movie> page = new PageImpl<>(new ArrayList<>());
 		given(movieService.findMovies(any(Pageable.class))).willReturn(page);
@@ -39,6 +41,7 @@ class MoviesRestControllerTest extends AbstractMvcUnitTest {
 	}
 
 	@Test
+	@WithMockUser
 	void should_return_empty_movie_results_for_invalid_genre() throws Exception {
 		given(movieService.findGenreBySlug(anyString())).willReturn(Optional.empty());
 
