@@ -33,13 +33,6 @@ public class WebSecurityConfig {
 		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
 	}
 
-	@Bean
-	public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-		AuthenticationManagerBuilder authenticationManagerBuilder = http
-				.getSharedObject(AuthenticationManagerBuilder.class);
-		return authenticationManagerBuilder.build();
-	}
-
 	@Configuration
 	@Order(1)
 	@RequiredArgsConstructor
@@ -47,7 +40,17 @@ public class WebSecurityConfig {
 
 		private final UserDetailsService userDetailsService;
 
+		private final PasswordEncoder passwordEncoder;
+
 		private final TokenHelper tokenHelper;
+
+		@Bean
+		public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+			AuthenticationManagerBuilder authenticationManagerBuilder = http
+					.getSharedObject(AuthenticationManagerBuilder.class);
+			authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+			return authenticationManagerBuilder.build();
+		}
 
 		@Bean
 		public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -58,13 +61,12 @@ public class WebSecurityConfig {
 					.requestMatchers(HttpMethod.POST, "/api/users/change-password").authenticated()
 					.requestMatchers("/api/users/**").permitAll()
 					// .antMatchers(HttpMethod.POST,"/users").hasAnyRole("USER", "ADMIN")
-					// .anyRequest().authenticated()
-					.and().addFilterBefore(new TokenAuthenticationFilter(tokenHelper, userDetailsService),
+					.anyRequest().authenticated().and()
+					.addFilterBefore(new TokenAuthenticationFilter(tokenHelper, userDetailsService),
 							BasicAuthenticationFilter.class);
 
-			http.csrf()
-					// .ignoringAntMatchers("/h2-console/**")//don't apply CSRF protection
-					// to /h2-console
+			http.csrf().ignoringRequestMatchers("/h2-console/**")
+					// don't apply CSRF protection to /h2-console
 					.disable().headers().frameOptions().sameOrigin();
 			// allow use of frame to same origin urls
 			return http.build();
