@@ -2,7 +2,7 @@ version: '3.1'
 services:
 
   moviebuffs-hub:
-    image: sivaprasadreddy/moviebuffs
+    image: dockertmt/moviebuffs
     container_name: moviebuffs-hub
     environment:
       - SPRING_PROFILES_ACTIVE=default
