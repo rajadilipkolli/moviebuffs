@@ -2,7 +2,7 @@ version: '3.1'
 services:
 
   moviebuffs:
-    build: ../moviebuffs-service]
+    build: ../moviebuffs-service
     container_name: moviebuffs
     ports:
       - "18080:8080"
