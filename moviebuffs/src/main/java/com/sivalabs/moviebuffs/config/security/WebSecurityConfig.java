@@ -42,16 +42,10 @@ public class WebSecurityConfig {
 
 		private final TokenHelper tokenHelper;
 
-		// @Bean
-		// @Override
-		// public AuthenticationManager authenticationManagerBean() throws Exception {
-		// return super.authenticationManagerBean();
-		// }
-
 		@Bean
 		public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 			http
-					// antMatcher("/api/**")
+					// .antMatcher("/api/**")
 					.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 					.authorizeHttpRequests().requestMatchers("/api/auth/**").permitAll()
 					.requestMatchers(HttpMethod.POST, "/api/users/change-password").authenticated()
@@ -74,7 +68,7 @@ public class WebSecurityConfig {
 	}
 
 	@Configuration
-	public static class FormLoginWebSecurityConfigurer {
+	public static class FormLoginWebSecurityConfiguration {
 
 		@Bean
 		public WebSecurityCustomizer webSecurityCustomizer() {
