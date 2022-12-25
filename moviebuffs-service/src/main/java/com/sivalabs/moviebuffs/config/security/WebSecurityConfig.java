@@ -57,9 +57,10 @@ public class WebSecurityConfig {
 			http
 					// .antMatcher("/api/**")
 					.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-					.authorizeHttpRequests().requestMatchers("/api/auth/**").permitAll()
-					.requestMatchers(HttpMethod.POST, "/api/users/change-password").authenticated()
-					.requestMatchers("/api/users/**").permitAll()
+					.authorizeHttpRequests()
+					.requestMatchers("/api/auth/**", "/api/users/**", "/swagger-ui.html", "/swagger-ui/**",
+							"/v3/api-docs/**")
+					.permitAll().requestMatchers(HttpMethod.POST, "/api/users/change-password").authenticated()
 					// .antMatchers(HttpMethod.POST,"/users").hasAnyRole("USER", "ADMIN")
 					.anyRequest().authenticated().and()
 					.addFilterBefore(new TokenAuthenticationFilter(tokenHelper, userDetailsService),
@@ -79,9 +80,10 @@ public class WebSecurityConfig {
 
 		@Bean
 		public SecurityFilterChain formFilterChain(HttpSecurity http) throws Exception {
-			http.csrf().disable().authorizeHttpRequests().requestMatchers("/resources/**", "/webjars/**").permitAll()
-					.requestMatchers("/registration", "/forgot-password", "/reset-password").permitAll()
-					.requestMatchers("/static/**", "/js/**", "/css/**", "/images/**", "/favicon.ico", "/h2-console/**")
+			http.csrf().disable().authorizeHttpRequests()
+					.requestMatchers("/resources/**", "/webjars/**", "/registration", "/forgot-password",
+							"/reset-password", "/static/**", "/js/**", "/css/**", "/images/**", "/favicon.ico",
+							"/h2-console/**")
 					.permitAll()
 					// .anyRequest().authenticated()
 					.and().formLogin().loginPage("/login").defaultSuccessUrl("/").failureUrl("/login?error").permitAll()
