@@ -5,6 +5,11 @@ on:
     branches-ignore:
       - 'master'
       - 'release*'
+    paths:
+      - "moviebuffs-data-importer/**"
+      - "moviebuffs-gatling-tests/**"
+      - "moviebuffs-service/**"
+      - "moviebuffs-tools/**"
 
 jobs:
 
@@ -22,4 +27,4 @@ jobs:
         cache: 'maven'
 
     - name: Build with Maven
-      run: mvn -B clean install -P full
+      run: ./mvnw -B clean install -P full

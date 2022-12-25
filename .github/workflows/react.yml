@@ -3,17 +3,27 @@ name: React CI/CD
 on:
   push:
     branches: [ master ]
+    paths:
+      - "moviebuffs-ui-react/**"
   pull_request:
     branches: [ master ]
+    paths:
+      - "moviebuffs-ui-react/**"
+    types:
+      - opened
+      - synchronize
+      - reopened
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: "moviebuffs-ui-react"
     strategy:
       matrix:
-        node-version: [14.x, 16.x]
+        node-version: [16.x, 18.x]
 
     steps:
     - name: Checkout repository
@@ -25,19 +35,13 @@ jobs:
         node-version: ${{ matrix.node-version }}
 
     - name: Install dependencies
-      run: |
-        cd moviebuffs-ui-react
-        npm install
+      run: npm install
 
     - name: Run the tests and generate coverage report
-      run: |
-        cd moviebuffs-ui-react
-        npm test -- --coverage
+      run: npm test -- --coverage
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3.1.1
 
     - name: Build
-      run: |
-        cd moviebuffs-ui-react
-        npm run build
+      run: npm run build
