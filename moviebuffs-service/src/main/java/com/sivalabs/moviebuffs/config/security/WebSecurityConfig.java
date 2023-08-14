@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,6 +12,9 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -53,33 +57,24 @@ public class WebSecurityConfig {
 		}
 
 		@Bean
+		@Order(Ordered.HIGHEST_PRECEDENCE)
 		public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-			http
-				// .antMatcher("/api/**")
-				.sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-				.and()
-				.authorizeHttpRequests()
-				.requestMatchers("/api/auth/**", "/api/users/**", "/swagger-ui.html", "/swagger-ui/**",
-						"/v3/api-docs/**")
-				.permitAll()
-				.requestMatchers(HttpMethod.POST, "/api/users/change-password")
-				.authenticated()
-				// .antMatchers(HttpMethod.POST,"/users").hasAnyRole("USER", "ADMIN")
-				.anyRequest()
-				.authenticated()
-				.and()
+			http.authorizeHttpRequests(requests -> requests.requestMatchers("/api/**"))
+				.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.authorizeHttpRequests(requests -> requests.requestMatchers("/api/auth/**")
+					.permitAll()
+					.requestMatchers(HttpMethod.POST, "/api/users/change-password")
+					.authenticated()
+					.requestMatchers("/api/users/**")
+					.permitAll())
 				.addFilterBefore(new TokenAuthenticationFilter(tokenHelper, userDetailsService),
 						BasicAuthenticationFilter.class);
 
-			http.csrf()
-				.ignoringRequestMatchers("/h2-console/**")
-				// don't apply CSRF protection to /h2-console
-				.disable()
-				.headers()
-				.frameOptions()
-				.sameOrigin();
-			// allow use of frame to same origin urls
+			// don't apply CSRF protection to /h2-console
+			http.csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**").disable())
+				// allow use of frame to same origin urls
+				.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
+
 			return http.build();
 		}
 
@@ -90,24 +85,25 @@ public class WebSecurityConfig {
 
 		@Bean
 		public SecurityFilterChain formFilterChain(HttpSecurity http) throws Exception {
-			http.csrf()
-				.disable()
-				.authorizeHttpRequests()
-				.requestMatchers("/resources/**", "/webjars/**", "/registration", "/forgot-password", "/reset-password",
-						"/static/**", "/js/**", "/css/**", "/images/**", "/favicon.ico", "/h2-console/**")
-				.permitAll()
-				// .anyRequest().authenticated()
-				.and()
-				.formLogin()
-				.loginPage("/login")
-				.defaultSuccessUrl("/")
-				.failureUrl("/login?error")
-				.permitAll()
-				.and()
-				.logout()
-				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-				.permitAll();
+			http.csrf(AbstractHttpConfigurer::disable)
+				.authorizeHttpRequests(requests -> requests.requestMatchers("/resources/**", "/webjars/**")
+					.permitAll()
+					.requestMatchers("/registration", "/forgot-password", "/reset-password")
+					.permitAll()
+					.requestMatchers("/h2-console/**")
+					.permitAll())
+				.formLogin(login -> login.loginPage("/login")
+					.defaultSuccessUrl("/")
+					.failureUrl("/login?error")
+					.permitAll())
+				.logout(logout -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll());
 			return http.build();
+		}
+
+		@Bean
+		public WebSecurityCustomizer webSecurityCustomizer() {
+			return (web) -> web.ignoring()
+				.requestMatchers("/static/**", "/js/**", "/css/**", "/images/**", "/favicon.ico", "/h2-console/**");
 		}
 
 	}
