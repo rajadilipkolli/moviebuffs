@@ -29,25 +29,31 @@ class UserRestControllerIT extends AbstractIntegrationTest {
 
 	@Test
 	void should_create_new_user_with_valid_data() throws Exception {
-		CreateUserRequestDTO createUserRequestDTO = CreateUserRequestDTO.builder().email("myemail@gmail.com")
-				.password("secret").name("myname").build();
+		CreateUserRequestDTO createUserRequestDTO = CreateUserRequestDTO.builder()
+			.email("myemail@gmail.com")
+			.password("secret")
+			.name("myname")
+			.build();
 
 		this.mockMvc
-				.perform(post("/api/users").contentType(APPLICATION_JSON)
-						.content(objectMapper.writeValueAsString(createUserRequestDTO)))
-				.andExpect(status().isCreated());
+			.perform(post("/api/users").contentType(APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(createUserRequestDTO)))
+			.andExpect(status().isCreated());
 
 	}
 
 	@Test
 	void should_fail_to_create_new_user_with_existing_email() throws Exception {
-		CreateUserRequestDTO createUserRequestDTO = CreateUserRequestDTO.builder().email("admin@gmail.com")
-				.password("secret").name("myname").build();
+		CreateUserRequestDTO createUserRequestDTO = CreateUserRequestDTO.builder()
+			.email("admin@gmail.com")
+			.password("secret")
+			.name("myname")
+			.build();
 
 		this.mockMvc
-				.perform(post("/api/users").contentType(APPLICATION_JSON)
-						.content(objectMapper.writeValueAsString(createUserRequestDTO)))
-				.andExpect(status().isBadRequest());
+			.perform(post("/api/users").contentType(APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(createUserRequestDTO)))
+			.andExpect(status().isBadRequest());
 
 	}
 
@@ -57,8 +63,10 @@ class UserRestControllerIT extends AbstractIntegrationTest {
 		User savedUser = createUser("someuser1@gmail.com");
 
 		savedUser.setName("New name");
-		this.mockMvc.perform(put("/api/users/" + savedUser.getId()).contentType(APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(savedUser))).andExpect(status().isOk());
+		this.mockMvc
+			.perform(put("/api/users/" + savedUser.getId()).contentType(APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(savedUser)))
+			.andExpect(status().isOk());
 
 	}
 
@@ -69,8 +77,10 @@ class UserRestControllerIT extends AbstractIntegrationTest {
 
 		savedUser.setName("New name");
 
-		this.mockMvc.perform(put("/api/users/" + savedUser.getId()).contentType(APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(savedUser))).andExpect(status().isOk());
+		this.mockMvc
+			.perform(put("/api/users/" + savedUser.getId()).contentType(APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(savedUser)))
+			.andExpect(status().isOk());
 
 	}
 
@@ -80,8 +90,10 @@ class UserRestControllerIT extends AbstractIntegrationTest {
 		User savedUser = createUser("siva2@gmail.com");
 		savedUser.setName("New name");
 
-		this.mockMvc.perform(put("/api/users/" + savedUser.getId()).contentType(APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(savedUser))).andExpect(status().isBadRequest());
+		this.mockMvc
+			.perform(put("/api/users/" + savedUser.getId()).contentType(APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(savedUser)))
+			.andExpect(status().isBadRequest());
 
 	}
 
@@ -110,21 +122,29 @@ class UserRestControllerIT extends AbstractIntegrationTest {
 	@Test
 	@WithMockUser("siva@gmail.com")
 	void should_update_password_when_user_is_authorized() throws Exception {
-		ChangePasswordDTO changePasswordDTO = ChangePasswordDTO.builder().oldPassword("siva").newPassword("newpwd")
-				.build();
+		ChangePasswordDTO changePasswordDTO = ChangePasswordDTO.builder()
+			.oldPassword("siva")
+			.newPassword("newpwd")
+			.build();
 
-		this.mockMvc.perform(post("/api/users/change-password").contentType(APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(changePasswordDTO))).andExpect(status().isOk());
+		this.mockMvc
+			.perform(post("/api/users/change-password").contentType(APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(changePasswordDTO)))
+			.andExpect(status().isOk());
 
 	}
 
 	@Test
 	void should_fail_to_update_password_when_user_is_not_authorized() throws Exception {
-		ChangePasswordDTO changePasswordDTO = ChangePasswordDTO.builder().oldPassword("admin").newPassword("newpwd")
-				.build();
+		ChangePasswordDTO changePasswordDTO = ChangePasswordDTO.builder()
+			.oldPassword("admin")
+			.newPassword("newpwd")
+			.build();
 
-		this.mockMvc.perform(post("/api/users/change-password").contentType(APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(changePasswordDTO))).andExpect(status().isForbidden());
+		this.mockMvc
+			.perform(post("/api/users/change-password").contentType(APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(changePasswordDTO)))
+			.andExpect(status().isForbidden());
 
 	}
 

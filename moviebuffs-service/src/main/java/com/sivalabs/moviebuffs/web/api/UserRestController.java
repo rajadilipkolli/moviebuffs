@@ -36,8 +36,10 @@ public class UserRestController {
 	@GetMapping("/{id}")
 	public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
 		log.info("process=get_user, user_id={}", id);
-		return userService.getUserById(id).map(userDTOMapper::toDTO).map(ResponseEntity::ok)
-				.orElse(ResponseEntity.notFound().build());
+		return userService.getUserById(id)
+			.map(userDTOMapper::toDTO)
+			.map(ResponseEntity::ok)
+			.orElse(ResponseEntity.notFound().build());
 	}
 
 	@PostMapping("")

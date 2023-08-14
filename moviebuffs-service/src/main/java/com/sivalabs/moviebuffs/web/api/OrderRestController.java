@@ -52,8 +52,9 @@ public class OrderRestController {
 	public ResponseEntity<Order> getOrderByOrderId(@PathVariable String orderId) {
 		log.info("Getting order by id: {}", orderId);
 		return orderService.findOrderByOrderId(orderId)
-				.filter(order -> securityService.isCurrentUserHasPrivilege(order.getCreatedBy().getId()))
-				.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+			.filter(order -> securityService.isCurrentUserHasPrivilege(order.getCreatedBy().getId()))
+			.map(ResponseEntity::ok)
+			.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@DeleteMapping("/{orderId}")

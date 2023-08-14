@@ -59,7 +59,7 @@ public class AuthenticationRestController {
 		String authToken = tokenHelper.getToken(request);
 		String refreshedToken = tokenHelper.refreshToken(authToken);
 		return ResponseEntity
-				.ok(new AuthenticationResponseDTO(refreshedToken, securityConfigProperties.getJwt().getExpiresIn()));
+			.ok(new AuthenticationResponseDTO(refreshedToken, securityConfigProperties.getJwt().getExpiresIn()));
 	}
 
 	@GetMapping("/me")

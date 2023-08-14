@@ -34,32 +34,38 @@ class AuthenticationRestControllerIT extends AbstractIntegrationTest {
 	@Test
 	void should_login_successfully_with_valid_credentials() throws Exception {
 		User user = createUser();
-		AuthenticationRequestDTO authenticationRequestDTO = AuthenticationRequestDTO.builder().username(user.getEmail())
-				.password(user.getPassword()).build();
+		AuthenticationRequestDTO authenticationRequestDTO = AuthenticationRequestDTO.builder()
+			.username(user.getEmail())
+			.password(user.getPassword())
+			.build();
 
-		this.mockMvc.perform(post("/api/auth/login").contentType(APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(authenticationRequestDTO))).andExpect(status().isOk());
+		this.mockMvc
+			.perform(post("/api/auth/login").contentType(APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(authenticationRequestDTO)))
+			.andExpect(status().isOk());
 	}
 
 	@Test
 	@Disabled
 	void should_not_login_with_invalid_credentials() throws Exception {
 		AuthenticationRequestDTO authenticationRequestDTO = AuthenticationRequestDTO.builder()
-				.username("nonexisting@gmail.com").password("secret").build();
+			.username("nonexisting@gmail.com")
+			.password("secret")
+			.build();
 
 		this.mockMvc
-				.perform(post("/api/auth/login").contentType(APPLICATION_JSON)
-						.content(objectMapper.writeValueAsString(authenticationRequestDTO)))
-				.andExpect(status().isUnauthorized());
+			.perform(post("/api/auth/login").contentType(APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(authenticationRequestDTO)))
+			.andExpect(status().isUnauthorized());
 	}
 
 	@Test
 	@WithMockUser("admin@gmail.com")
 	void should_get_refreshed_authToken_if_authorized() throws Exception {
 		String token = tokenHelper.generateToken("admin@gmail.com");
-		this.mockMvc.perform(
-				post("/api/auth/refresh").header(securityConfigProperties.getJwt().getHeader(), "Bearer " + token))
-				.andExpect(status().isOk());
+		this.mockMvc
+			.perform(post("/api/auth/refresh").header(securityConfigProperties.getJwt().getHeader(), "Bearer " + token))
+			.andExpect(status().isOk());
 	}
 
 	@Test
@@ -69,9 +75,10 @@ class AuthenticationRestControllerIT extends AbstractIntegrationTest {
 
 	@Test
 	void should_fail_to_get_refreshed_authToken_if_token_is_invalid() throws Exception {
-		this.mockMvc.perform(
-				post("/api/auth/refresh").header(securityConfigProperties.getJwt().getHeader(), "Bearer invalid-token"))
-				.andExpect(status().isForbidden());
+		this.mockMvc
+			.perform(post("/api/auth/refresh").header(securityConfigProperties.getJwt().getHeader(),
+					"Bearer invalid-token"))
+			.andExpect(status().isForbidden());
 	}
 
 	@Test

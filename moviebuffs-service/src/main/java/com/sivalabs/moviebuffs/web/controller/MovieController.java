@@ -76,7 +76,7 @@ public class MovieController {
 		Optional<Genre> byId = movieService.findGenreBySlug(slug);
 		if (byId.isPresent()) {
 			Page<MovieDTO> data = movieService.findMoviesByGenre(byId.get().getId(), null, pageable)
-					.map(movieDTOMapper::map);
+				.map(movieDTOMapper::map);
 			model.addAttribute("header", "Movies by Genre \"" + byId.get().getName() + "\"");
 			model.addAttribute("moviesData", data);
 			model.addAttribute("page", data.getNumber() + 1);

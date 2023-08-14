@@ -81,8 +81,9 @@ public class MovieDataImporter {
 			throws IOException, CsvValidationException {
 		log.info("Importing movies from file: {}", fileName);
 		CSVIterator iterator = getCsvIteratorFromClassPathResource(fileName);
-		Map<String, Genre> genresMap = movieService.findAllGenres(Sort.by("name")).stream()
-				.collect(Collectors.toMap(Genre::getName, g -> g));
+		Map<String, Genre> genresMap = movieService.findAllGenres(Sort.by("name"))
+			.stream()
+			.collect(Collectors.toMap(Genre::getName, g -> g));
 
 		List<Movie> moviesBatch = new ArrayList<>();
 		while (iterator.hasNext()) {
@@ -198,13 +199,32 @@ public class MovieDataImporter {
 	}
 
 	private MovieCsvRecord parseMovieRecord(String[] nextLine) {
-		return MovieCsvRecord.builder().adult(nextLine[0]).belongsToCollection(nextLine[1]).budget(nextLine[2])
-				.genres(nextLine[3]).homepage(nextLine[4]).id(nextLine[5]).imdbId(nextLine[6])
-				.originalLanguage(nextLine[7]).originalTitle(nextLine[8]).overview(nextLine[9]).popularity(nextLine[10])
-				.posterPath(nextLine[11]).productionCompanies(nextLine[12]).productionCountries(nextLine[13])
-				.releaseDate(nextLine[14]).revenue(nextLine[15]).runtime(nextLine[16]).spokenLanguages(nextLine[17])
-				.status(nextLine[18]).tagline(nextLine[19]).title(nextLine[20]).video(nextLine[21])
-				.voteAverage(nextLine[22]).voteCount(nextLine[23]).build();
+		return MovieCsvRecord.builder()
+			.adult(nextLine[0])
+			.belongsToCollection(nextLine[1])
+			.budget(nextLine[2])
+			.genres(nextLine[3])
+			.homepage(nextLine[4])
+			.id(nextLine[5])
+			.imdbId(nextLine[6])
+			.originalLanguage(nextLine[7])
+			.originalTitle(nextLine[8])
+			.overview(nextLine[9])
+			.popularity(nextLine[10])
+			.posterPath(nextLine[11])
+			.productionCompanies(nextLine[12])
+			.productionCountries(nextLine[13])
+			.releaseDate(nextLine[14])
+			.revenue(nextLine[15])
+			.runtime(nextLine[16])
+			.spokenLanguages(nextLine[17])
+			.status(nextLine[18])
+			.tagline(nextLine[19])
+			.title(nextLine[20])
+			.video(nextLine[21])
+			.voteAverage(nextLine[22])
+			.voteCount(nextLine[23])
+			.build();
 	}
 
 	private List<CastMemberRecord> getCastMembers(String castArrayJson) throws JsonProcessingException {

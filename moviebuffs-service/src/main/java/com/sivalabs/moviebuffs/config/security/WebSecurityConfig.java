@@ -47,7 +47,7 @@ public class WebSecurityConfig {
 		@Bean
 		public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
 			AuthenticationManagerBuilder authenticationManagerBuilder = http
-					.getSharedObject(AuthenticationManagerBuilder.class);
+				.getSharedObject(AuthenticationManagerBuilder.class);
 			authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
 			return authenticationManagerBuilder.build();
 		}
@@ -55,20 +55,30 @@ public class WebSecurityConfig {
 		@Bean
 		public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 			http
-					// .antMatcher("/api/**")
-					.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-					.authorizeHttpRequests()
-					.requestMatchers("/api/auth/**", "/api/users/**", "/swagger-ui.html", "/swagger-ui/**",
-							"/v3/api-docs/**")
-					.permitAll().requestMatchers(HttpMethod.POST, "/api/users/change-password").authenticated()
-					// .antMatchers(HttpMethod.POST,"/users").hasAnyRole("USER", "ADMIN")
-					.anyRequest().authenticated().and()
-					.addFilterBefore(new TokenAuthenticationFilter(tokenHelper, userDetailsService),
-							BasicAuthenticationFilter.class);
+				// .antMatcher("/api/**")
+				.sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.and()
+				.authorizeHttpRequests()
+				.requestMatchers("/api/auth/**", "/api/users/**", "/swagger-ui.html", "/swagger-ui/**",
+						"/v3/api-docs/**")
+				.permitAll()
+				.requestMatchers(HttpMethod.POST, "/api/users/change-password")
+				.authenticated()
+				// .antMatchers(HttpMethod.POST,"/users").hasAnyRole("USER", "ADMIN")
+				.anyRequest()
+				.authenticated()
+				.and()
+				.addFilterBefore(new TokenAuthenticationFilter(tokenHelper, userDetailsService),
+						BasicAuthenticationFilter.class);
 
-			http.csrf().ignoringRequestMatchers("/h2-console/**")
-					// don't apply CSRF protection to /h2-console
-					.disable().headers().frameOptions().sameOrigin();
+			http.csrf()
+				.ignoringRequestMatchers("/h2-console/**")
+				// don't apply CSRF protection to /h2-console
+				.disable()
+				.headers()
+				.frameOptions()
+				.sameOrigin();
 			// allow use of frame to same origin urls
 			return http.build();
 		}
@@ -80,14 +90,23 @@ public class WebSecurityConfig {
 
 		@Bean
 		public SecurityFilterChain formFilterChain(HttpSecurity http) throws Exception {
-			http.csrf().disable().authorizeHttpRequests()
-					.requestMatchers("/resources/**", "/webjars/**", "/registration", "/forgot-password",
-							"/reset-password", "/static/**", "/js/**", "/css/**", "/images/**", "/favicon.ico",
-							"/h2-console/**")
-					.permitAll()
-					// .anyRequest().authenticated()
-					.and().formLogin().loginPage("/login").defaultSuccessUrl("/").failureUrl("/login?error").permitAll()
-					.and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll();
+			http.csrf()
+				.disable()
+				.authorizeHttpRequests()
+				.requestMatchers("/resources/**", "/webjars/**", "/registration", "/forgot-password", "/reset-password",
+						"/static/**", "/js/**", "/css/**", "/images/**", "/favicon.ico", "/h2-console/**")
+				.permitAll()
+				// .anyRequest().authenticated()
+				.and()
+				.formLogin()
+				.loginPage("/login")
+				.defaultSuccessUrl("/")
+				.failureUrl("/login?error")
+				.permitAll()
+				.and()
+				.logout()
+				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+				.permitAll();
 			return http.build();
 		}
 

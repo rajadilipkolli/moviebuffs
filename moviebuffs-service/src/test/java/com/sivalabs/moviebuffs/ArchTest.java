@@ -12,15 +12,20 @@ import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
 class ArchTest {
 
 	JavaClasses importedClasses = new ClassFileImporter().withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
-			.importPackages("com.sivalabs.moviebuffs");
+		.importPackages("com.sivalabs.moviebuffs");
 
 	@Test
 	void servicesAndRepositoriesShouldNotDependOnWebLayer() {
 
-		noClasses().that().resideInAnyPackage("com.sivalabs.moviebuffs.core.service..").or()
-				.resideInAnyPackage("com.sivalabs.moviebuffs.core.repository..").should().dependOnClassesThat()
-				.resideInAnyPackage("com.sivalabs.moviebuffs.web..")
-				.because("Services and repositories should not depend on web layer").check(importedClasses);
+		noClasses().that()
+			.resideInAnyPackage("com.sivalabs.moviebuffs.core.service..")
+			.or()
+			.resideInAnyPackage("com.sivalabs.moviebuffs.core.repository..")
+			.should()
+			.dependOnClassesThat()
+			.resideInAnyPackage("com.sivalabs.moviebuffs.web..")
+			.because("Services and repositories should not depend on web layer")
+			.check(importedClasses);
 
 	}
 
@@ -31,23 +36,42 @@ class ArchTest {
 
 	@Test
 	void shouldFollowLayeredArchitecture() {
-		layeredArchitecture().consideringOnlyDependenciesInLayers().layer("Config").definedBy("..config..")
-				.layer("Jobs").definedBy("..jobs..").layer("Importer").definedBy("..importer..").layer("Web")
-				.definedBy("..web..").layer("Service").definedBy("..service..").layer("Persistence")
-				.definedBy("..repository..")
+		layeredArchitecture().consideringOnlyDependenciesInLayers()
+			.layer("Config")
+			.definedBy("..config..")
+			.layer("Jobs")
+			.definedBy("..jobs..")
+			.layer("Importer")
+			.definedBy("..importer..")
+			.layer("Web")
+			.definedBy("..web..")
+			.layer("Service")
+			.definedBy("..service..")
+			.layer("Persistence")
+			.definedBy("..repository..")
 
-				.whereLayer("Web").mayNotBeAccessedByAnyLayer().whereLayer("Service")
-				.mayOnlyBeAccessedByLayers("Config", "Importer", "Jobs", "Web").whereLayer("Persistence")
-				.mayOnlyBeAccessedByLayers("Service").check(importedClasses);
+			.whereLayer("Web")
+			.mayNotBeAccessedByAnyLayer()
+			.whereLayer("Service")
+			.mayOnlyBeAccessedByLayers("Config", "Importer", "Jobs", "Web")
+			.whereLayer("Persistence")
+			.mayOnlyBeAccessedByLayers("Service")
+			.check(importedClasses);
 	}
 
 	@Test
 	void shouldFollowNamingConvention() {
-		classes().that().resideInAPackage("com.sivalabs.moviebuffs.core.repository").should()
-				.haveSimpleNameEndingWith("Repository").check(importedClasses);
+		classes().that()
+			.resideInAPackage("com.sivalabs.moviebuffs.core.repository")
+			.should()
+			.haveSimpleNameEndingWith("Repository")
+			.check(importedClasses);
 
-		classes().that().resideInAPackage("com.sivalabs.moviebuffs.core.service").should()
-				.haveSimpleNameEndingWith("Service").check(importedClasses);
+		classes().that()
+			.resideInAPackage("com.sivalabs.moviebuffs.core.service")
+			.should()
+			.haveSimpleNameEndingWith("Service")
+			.check(importedClasses);
 	}
 
 	@Test
@@ -55,11 +79,18 @@ class ArchTest {
 
 		JavaClasses classes = new ClassFileImporter().importPackages("com.sivalabs.moviebuffs");
 
-		noClasses().should().accessClassesThat().resideInAnyPackage("org.junit")
-				.because("Tests should use Junit5 instead of Junit4").check(classes);
+		noClasses().should()
+			.accessClassesThat()
+			.resideInAnyPackage("org.junit")
+			.because("Tests should use Junit5 instead of Junit4")
+			.check(classes);
 
-		noMethods().should().beAnnotatedWith("org.junit.Test").orShould().beAnnotatedWith("org.junit.Ignore")
-				.because("Tests should use Junit5 instead of Junit4").check(classes);
+		noMethods().should()
+			.beAnnotatedWith("org.junit.Test")
+			.orShould()
+			.beAnnotatedWith("org.junit.Ignore")
+			.because("Tests should use Junit5 instead of Junit4")
+			.check(classes);
 	}
 
 }

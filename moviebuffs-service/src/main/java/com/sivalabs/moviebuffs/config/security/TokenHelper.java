@@ -47,8 +47,11 @@ public class TokenHelper {
 			if (claims == null)
 				return null;
 			claims.setIssuedAt(a);
-			refreshedToken = Jwts.builder().setClaims(claims).setExpiration(generateExpirationDate())
-					.signWith(SIGNATURE_ALGORITHM, securityConfigProperties.getJwt().getSecret()).compact();
+			refreshedToken = Jwts.builder()
+				.setClaims(claims)
+				.setExpiration(generateExpirationDate())
+				.signWith(SIGNATURE_ALGORITHM, securityConfigProperties.getJwt().getSecret())
+				.compact();
 		}
 		catch (Exception e) {
 			refreshedToken = null;
@@ -57,19 +60,25 @@ public class TokenHelper {
 	}
 
 	public String generateToken(String username) {
-		return Jwts.builder().setIssuer(securityConfigProperties.getJwt().getIssuer()).setSubject(username)
-				.setAudience(AUDIENCE_WEB).setIssuedAt(timeProvider.now()).setExpiration(generateExpirationDate())
-				.signWith(SIGNATURE_ALGORITHM,
-						Base64.getEncoder().encodeToString(
-								securityConfigProperties.getJwt().getSecret().getBytes(StandardCharsets.UTF_8)))
-				.compact();
+		return Jwts.builder()
+			.setIssuer(securityConfigProperties.getJwt().getIssuer())
+			.setSubject(username)
+			.setAudience(AUDIENCE_WEB)
+			.setIssuedAt(timeProvider.now())
+			.setExpiration(generateExpirationDate())
+			.signWith(SIGNATURE_ALGORITHM,
+					Base64.getEncoder()
+						.encodeToString(securityConfigProperties.getJwt().getSecret().getBytes(StandardCharsets.UTF_8)))
+			.compact();
 	}
 
 	private Claims getAllClaimsFromToken(String token) {
 		Claims claims;
 		try {
-			claims = Jwts.parser().setSigningKey(securityConfigProperties.getJwt().getSecret()).parseClaimsJws(token)
-					.getBody();
+			claims = Jwts.parser()
+				.setSigningKey(securityConfigProperties.getJwt().getSecret())
+				.parseClaimsJws(token)
+				.getBody();
 		}
 		catch (Exception e) {
 			claims = null;
