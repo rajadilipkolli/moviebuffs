@@ -22,8 +22,10 @@ public class UserDTOMapper {
 		user.setEmail(userDTO.getEmail());
 		user.setPassword(userDTO.getPassword());
 		if (userDTO.getRoles() != null) {
-			user.setRoles(userDTO.getRoles().stream().map(r -> userService.findRoleByName(r).orElse(null))
-					.collect(Collectors.toList()));
+			user.setRoles(userDTO.getRoles()
+				.stream()
+				.map(r -> userService.findRoleByName(r).orElse(null))
+				.collect(Collectors.toList()));
 		}
 		return user;
 	}

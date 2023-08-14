@@ -52,8 +52,9 @@ class OrderRestControllerTest extends AbstractMvcUnitTest {
 	void should_fetch_all_orders() throws Exception {
 		given(orderService.findAllOrders()).willReturn(this.orderList);
 
-		this.mockMvc.perform(get(ORDERS_COLLECTION_BASE_PATH)).andExpect(status().isOk())
-				.andExpect(jsonPath("$.size()", is(orderList.size())));
+		this.mockMvc.perform(get(ORDERS_COLLECTION_BASE_PATH))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.size()", is(orderList.size())));
 	}
 
 	@Test
@@ -63,8 +64,9 @@ class OrderRestControllerTest extends AbstractMvcUnitTest {
 		given(orderService.findOrderByOrderId(order.getOrderId())).willReturn(Optional.of(order));
 		given(securityService.isCurrentUserHasPrivilege(anyLong())).willReturn(true);
 
-		this.mockMvc.perform(get(ORDERS_SINGLE_BASE_PATH, order.getOrderId())).andExpect(status().isOk())
-				.andExpect(jsonPath("$.orderId", is(order.getOrderId())));
+		this.mockMvc.perform(get(ORDERS_SINGLE_BASE_PATH, order.getOrderId()))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.orderId", is(order.getOrderId())));
 	}
 
 	@Test
@@ -86,10 +88,12 @@ class OrderRestControllerTest extends AbstractMvcUnitTest {
 		given(orderService.createOrder(any(Order.class))).willReturn(orderConfirmationDTO);
 
 		this.mockMvc
-				.perform(post(ORDERS_COLLECTION_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
-						.content(objectMapper.writeValueAsString(order)).with(csrf()))
-				.andExpect(status().isCreated()).andExpect(jsonPath("$.orderId", is(orderConfirmationDTO.getOrderId())))
-				.andExpect(jsonPath("$.orderStatus", is(orderConfirmationDTO.getOrderStatus().name())));
+			.perform(post(ORDERS_COLLECTION_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(order))
+				.with(csrf()))
+			.andExpect(status().isCreated())
+			.andExpect(jsonPath("$.orderId", is(orderConfirmationDTO.getOrderId())))
+			.andExpect(jsonPath("$.orderStatus", is(orderConfirmationDTO.getOrderStatus().name())));
 
 	}
 
@@ -115,7 +119,7 @@ class OrderRestControllerTest extends AbstractMvcUnitTest {
 		willThrow(BadRequestException.class).given(orderService).cancelOrder(order.getOrderId());
 
 		this.mockMvc.perform(delete(ORDERS_SINGLE_BASE_PATH, order.getOrderId()).with(csrf()))
-				.andExpect(status().isBadRequest());
+			.andExpect(status().isBadRequest());
 	}
 
 	@Test
@@ -128,7 +132,7 @@ class OrderRestControllerTest extends AbstractMvcUnitTest {
 		// willThrow(BadRequestException.class).given(orderService).cancelOrder(order.getOrderId());
 
 		this.mockMvc.perform(delete(ORDERS_SINGLE_BASE_PATH, order.getOrderId()).with(csrf()))
-				.andExpect(status().isBadRequest());
+			.andExpect(status().isBadRequest());
 	}
 
 	@Test

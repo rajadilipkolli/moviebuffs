@@ -59,7 +59,7 @@ public class MoviesRestController {
 	public ResponseEntity<MovieDTO> getMovieById(@PathVariable Long id) {
 		Optional<MovieDTO> movieById = movieService.findMovieById(id).map(movieDTOMapper::map);
 		return movieById.map(ResponseEntity::ok)
-				.orElseThrow(() -> new ResourceNotFoundException("Movie not found with id=" + id));
+			.orElseThrow(() -> new ResourceNotFoundException("Movie not found with id=" + id));
 	}
 
 	@GetMapping("/genres")
@@ -70,8 +70,8 @@ public class MoviesRestController {
 	private Page<MovieDTO> getMoviesByGenreSlug(String genreSlug, String query, Pageable pageable) {
 		Optional<Genre> byId = movieService.findGenreBySlug(genreSlug);
 		return byId
-				.map(genre -> movieService.findMoviesByGenre(genre.getId(), query, pageable).map(movieDTOMapper::map))
-				.orElseGet(() -> new PageImpl<>(new ArrayList<>()));
+			.map(genre -> movieService.findMoviesByGenre(genre.getId(), query, pageable).map(movieDTOMapper::map))
+			.orElseGet(() -> new PageImpl<>(new ArrayList<>()));
 	}
 
 }

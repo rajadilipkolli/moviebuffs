@@ -43,8 +43,9 @@ class OrderRestControllerIT extends AbstractIntegrationTest {
 	@Test
 	@WithMockUser(value = "admin@gmail.com", roles = { "USER", "ADMIN" })
 	void should_fetch_all_orders() throws Exception {
-		this.mockMvc.perform(get(ORDERS_COLLECTION_BASE_PATH)).andExpect(status().isOk())
-				.andExpect(jsonPath("$.size()", is(orderList.size())));
+		this.mockMvc.perform(get(ORDERS_COLLECTION_BASE_PATH))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.size()", is(orderList.size())));
 	}
 
 	@Test
@@ -52,8 +53,9 @@ class OrderRestControllerIT extends AbstractIntegrationTest {
 	void should_fetch_order_by_id() throws Exception {
 		Order order = this.orderList.get(0);
 
-		this.mockMvc.perform(get(ORDERS_SINGLE_BASE_PATH, order.getOrderId())).andExpect(status().isOk())
-				.andExpect(jsonPath("$.orderId", is(order.getOrderId())));
+		this.mockMvc.perform(get(ORDERS_SINGLE_BASE_PATH, order.getOrderId()))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.orderId", is(order.getOrderId())));
 	}
 
 	@Test
@@ -62,10 +64,11 @@ class OrderRestControllerIT extends AbstractIntegrationTest {
 		Order order = this.orderList.get(0);
 
 		this.mockMvc
-				.perform(post(ORDERS_COLLECTION_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
-						.content(objectMapper.writeValueAsString(order)))
-				.andExpect(status().isCreated()).andExpect(jsonPath("$.orderId", notNullValue()))
-				.andExpect(jsonPath("$.orderStatus", is(Order.OrderStatus.NEW.name())));
+			.perform(post(ORDERS_COLLECTION_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(order)))
+			.andExpect(status().isCreated())
+			.andExpect(jsonPath("$.orderId", notNullValue()))
+			.andExpect(jsonPath("$.orderStatus", is(Order.OrderStatus.NEW.name())));
 
 	}
 
