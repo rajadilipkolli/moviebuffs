@@ -48,8 +48,8 @@ public class TokenHelper {
 				return null;
 			claims.setIssuedAt(a);
 			refreshedToken = Jwts.builder()
-				.setClaims(claims)
-				.setExpiration(generateExpirationDate())
+				.claims(claims)
+				.expiration(generateExpirationDate())
 				.signWith(SIGNATURE_ALGORITHM, securityConfigProperties.getJwt().getSecret())
 				.compact();
 		}
