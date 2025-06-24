@@ -1,5 +1,6 @@
 package com.sivalabs.moviebuffs.core.entity;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -25,6 +26,7 @@ import lombok.Setter;
 @EqualsAndHashCode(of = { "id" }, callSuper = false)
 public class CastMember implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

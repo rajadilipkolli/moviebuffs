@@ -38,7 +38,7 @@ public class MoviesRestController {
 
 	@GetMapping("/movies")
 	public MoviesResponseDTO getMovies(@RequestParam(name = "genre", required = false) String genreSlug,
-			@RequestParam(name = "query", required = false) String query,
+			@RequestParam(required = false) String query,
 			@PageableDefault(size = DEFAULT_PAGE_SIZE) @SortDefault.SortDefaults({
 					@SortDefault(sort = "releaseDate", direction = DESC) }) Pageable pageable) {
 		log.info("API Fetching movies for page : {}, query: {}, genre: {}", pageable.getPageNumber(), query, genreSlug);

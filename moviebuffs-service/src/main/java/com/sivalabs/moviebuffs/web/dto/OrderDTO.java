@@ -5,12 +5,14 @@ import lombok.Setter;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import java.io.Serial;
 import java.io.Serializable;
 
 @Setter
 @Getter
 public class OrderDTO implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@NotEmpty(message = "Customer Name is required")

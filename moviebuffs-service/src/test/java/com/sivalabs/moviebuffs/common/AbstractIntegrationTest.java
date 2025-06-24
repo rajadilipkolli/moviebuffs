@@ -13,9 +13,9 @@ import static com.sivalabs.moviebuffs.core.utils.Constants.PROFILE_IT;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @ActiveProfiles({ PROFILE_IT })
-@SpringBootTest(webEnvironment = RANDOM_PORT, classes = { MovieBuffsApplication.class })
+@SpringBootTest(webEnvironment = RANDOM_PORT, classes = { MovieBuffsApplication.class, PostGreSQLContainer.class })
 @AutoConfigureMockMvc
-public abstract class AbstractIntegrationTest extends AbstractPostGresContainer {
+public abstract class AbstractIntegrationTest {
 
 	@Autowired
 	protected MockMvc mockMvc;

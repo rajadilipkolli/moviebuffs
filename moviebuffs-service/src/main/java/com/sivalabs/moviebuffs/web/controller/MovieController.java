@@ -41,7 +41,7 @@ public class MovieController {
 	}
 
 	@GetMapping({ "/" })
-	public String home(@RequestParam(name = "query", required = false) String query,
+	public String home(@RequestParam(required = false) String query,
 			@PageableDefault(size = 24) @SortDefault.SortDefaults({
 					@SortDefault(sort = "releaseDate", direction = DESC) }) Pageable pageable,
 			Model model) {
