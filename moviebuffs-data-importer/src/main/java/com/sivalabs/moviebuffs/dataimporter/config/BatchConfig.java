@@ -3,7 +3,6 @@ package com.sivalabs.moviebuffs.dataimporter.config;
 import com.opencsv.exceptions.CsvValidationException;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
@@ -19,7 +18,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import java.io.IOException;
 
 @Configuration
-@EnableBatchProcessing
 public class BatchConfig {
 
     private final JobRepository jobRepository;
@@ -34,16 +32,15 @@ public class BatchConfig {
     }
 
     @Bean
-    public Job importMovieDataJob(final Step step) throws IOException, CsvValidationException {
+    Job importMovieDataJob() throws IOException, CsvValidationException {
         return new JobBuilder("importMovieDataJob", jobRepository)
-                .start(step)
                 .incrementer(new RunIdIncrementer())
                 .start(step())
                 .build();
     }
 
     @Bean
-    public Step step() throws IOException, CsvValidationException {
+    Step step() throws IOException, CsvValidationException {
         return new StepBuilder("execution-step", jobRepository)
                 .<MovieCsvRecord, MovieCsvRecord>chunk(5, transactionManager)
                 .reader(reader())
@@ -53,12 +50,12 @@ public class BatchConfig {
     }
 
     @Bean
-    public ItemReader<MovieCsvRecord> reader() throws IOException, CsvValidationException {
+    ItemReader<MovieCsvRecord> reader() throws IOException, CsvValidationException {
         return new OpenCsvItemReader(inputResource, 1);
     }
 
     @Bean
-    public ItemWriter<MovieCsvRecord> writer() {
+    ItemWriter<MovieCsvRecord> writer() {
         return items -> {
             for (MovieCsvRecord record : items) {
                 System.out.println(record);

@@ -1,37 +1,45 @@
 package com.sivalabs.moviebuffs.dataimporter;
 
+import com.sivalabs.moviebuffs.dataimporter.common.AbstractIntegrationTest;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.TestPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import org.springframework.batch.core.BatchStatus;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.test.JobLauncherTestUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@Testcontainers
-@TestPropertySource(properties = "spring.batch.initialize-schema=always")
-class MoviebuffsDataImporterApplicationTests {
 
-    @Container
-    protected static final PostgreSQLContainer<?> sqlContainer =
-            new PostgreSQLContainer<>("postgres:17-alpine")
-                    .withDatabaseName("integration-tests-db")
-                    .withUsername("username")
-                    .withPassword("password");
+class MoviebuffsDataImporterApplicationTests extends AbstractIntegrationTest {
 
-    @DynamicPropertySource
-    static void setSqlContainer(DynamicPropertyRegistry propertyRegistry) {
-        propertyRegistry.add("spring.datasource.url", sqlContainer::getJdbcUrl);
-        propertyRegistry.add("spring.datasource.username", sqlContainer::getUsername);
-        propertyRegistry.add("spring.datasource.password", sqlContainer::getPassword);
-    }
+    @Autowired
+    private JobLauncherTestUtils jobLauncherTestUtils;
+
+    @Autowired
+    private Job importMovieDataJob;
+
     @Test
     void contextLoads() {
-        assertThat(sqlContainer.isRunning()).isTrue();
+        assertThat(mockMvc).isNotNull();
     }
 
+    @Test
+    void shouldImportMovieData() throws Exception {
+        // Set the job for the test
+        jobLauncherTestUtils.setJob(importMovieDataJob);
+
+        // Given
+        JobParameters jobParameters = new JobParametersBuilder()
+                .addString("jobId", String.valueOf(System.currentTimeMillis()))
+                .toJobParameters();
+
+        // When
+        JobExecution jobExecution = jobLauncherTestUtils.launchJob(jobParameters);
+
+        // Then
+        assertThat(jobExecution.getStatus()).isEqualTo(BatchStatus.COMPLETED);
+    }
 }

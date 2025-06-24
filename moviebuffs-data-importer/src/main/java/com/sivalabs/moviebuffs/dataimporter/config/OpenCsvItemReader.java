@@ -10,7 +10,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class OpenCsvItemReader implements ItemReader<MovieCsvRecord> {
-    private CSVIterator csvIterator;
+
+    private final CSVIterator csvIterator;
 
     public OpenCsvItemReader(Resource inputResource, int skipLines) throws IOException, CsvValidationException {
         InputStreamReader inputStreamReader = new InputStreamReader(inputResource.getInputStream());
@@ -21,7 +22,7 @@ public class OpenCsvItemReader implements ItemReader<MovieCsvRecord> {
 
     @Override
     public MovieCsvRecord read() {
-        if(csvIterator.hasNext()) {
+        if (csvIterator.hasNext()) {
             String[] nextLine = csvIterator.next();
             return parseMovieRecord(nextLine);
         }
