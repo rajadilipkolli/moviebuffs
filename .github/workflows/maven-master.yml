@@ -27,21 +27,8 @@ jobs:
           distribution: 'adopt'
           cache: 'maven'
 
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v3.4.3
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-
       - name: Build with Maven
         run: ./mvnw -B clean install -Pfull
-
-      - name: SonarCloud Scan
-        run: ./mvnw -B sonar:sonar -Psonar -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-        working-directory: ./moviebuffs-service
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   docker:
     name: Publish - Docker Hub
