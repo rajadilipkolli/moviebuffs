@@ -1,5 +1,6 @@
 package com.sivalabs.moviebuffs.core.entity;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -34,6 +35,7 @@ import lombok.Setter;
 @EqualsAndHashCode(of = { "id" }, callSuper = false)
 public class Movie implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

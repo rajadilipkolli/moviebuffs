@@ -44,7 +44,7 @@ public class CartController extends BaseController {
 	}
 
 	@GetMapping(value = "/cart/checkout")
-	public String checkout(@Valid @ModelAttribute("order") OrderDTO order, BindingResult result, Model model,
+	public String checkout(@Valid @ModelAttribute OrderDTO order, BindingResult result, Model model,
 			RedirectAttributes redirectAttributes, HttpServletRequest request) {
 		Cart cart = getOrCreateCart(request);
 		if (result.hasErrors()) {
@@ -83,7 +83,7 @@ public class CartController extends BaseController {
 	}
 
 	@GetMapping(value = "/orders/{orderId}")
-	public String viewOrder(@PathVariable(value = "orderId") String orderId, Model model) {
+	public String viewOrder(@PathVariable String orderId, Model model) {
 		Order order = orderService.findOrderByOrderId(orderId).orElse(null);
 		model.addAttribute("order", order);
 		return "order";
@@ -124,7 +124,7 @@ public class CartController extends BaseController {
 
 	@DeleteMapping(value = "/cart/items/{id}")
 	@ResponseBody
-	public Cart removeCartItem(@PathVariable("id") Long id, HttpServletRequest request) {
+	public Cart removeCartItem(@PathVariable Long id, HttpServletRequest request) {
 		Cart cart = getOrCreateCart(request);
 		cart.removeItem(id);
 		return cart;
