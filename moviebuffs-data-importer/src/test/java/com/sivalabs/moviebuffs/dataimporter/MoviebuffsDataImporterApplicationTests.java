@@ -18,7 +18,7 @@ class MoviebuffsDataImporterApplicationTests {
 
     @Container
     protected static final PostgreSQLContainer<?> sqlContainer =
-            new PostgreSQLContainer<>("postgres:15-alpine")
+            new PostgreSQLContainer<>("postgres:17-alpine")
                     .withDatabaseName("integration-tests-db")
                     .withUsername("username")
                     .withPassword("password");
