@@ -1,161 +1,58 @@
-import React from "react";
-import {connect} from "react-redux";
-import {NavLink} from "react-router-dom";
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { NavLink } from "react-router-dom";
 import * as actions from "../store/actions/index";
-import {isAuthenticated} from "../store/localStorage";
 
-class CartContainer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      order: {
-        customerName: "",
-        customerEmail: "",
-        deliveryAddress: "",
-        creditCardNumber: "",
-        cvv: ""
-      }
-    };
-  }
+const CartContainer = () => {
+  const cart = useSelector(state => state.cart.cart);
+  const dispatch = useDispatch();
+  
+  const [order, setOrder] = useState({
+    customerName: "",
+    customerEmail: "",
+    deliveryAddress: "",
+    creditCardNumber: "",
+    cvv: ""
+  });
 
-  cartTotalAmount = () => {
-    return this.props.cart.reduce((accumulator, currentValue) => {
-      return accumulator + currentValue.product.price * currentValue.quantity;
-    }, 0.0);
+  const cartTotalAmount = () => {
+    return cart.reduce((accumulator, item) => 
+      accumulator + (item.product.price * item.quantity), 0.0);
   };
 
-  cartItems = () => {
-    return (
-      <table className="table">
-        <thead>
-          <tr>
-            <th scope="col">Product Name</th>
-            <th scope="col">Price</th>
-            <th scope="col">Quantity</th>
-            <th scope="col">Sub Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {this.props.cart.map(item => (
-            <tr key={item.product.id}>
-              <td>{item.product.title}</td>
-              <td>{item.product.price}</td>
-              <td>{item.quantity}</td>
-              <td>{item.product.price * item.quantity}</td>
-            </tr>
-          ))}
-        </tbody>
-        <tfoot>
-          <tr>
-            <th colSpan="3"></th>
-            <th colSpan="1" style={{ textAlign: "left" }}>
-              Total Amount: {this.cartTotalAmount()}
-            </th>
-          </tr>
-        </tfoot>
-      </table>
-    );
+  const cartItems = () => {
+    return cart.map(item => (
+      <tr key={item.product.id}>
+        <td>{item.product.title}</td>
+        <td>${item.product.price}</td>
+        <td>{item.quantity}</td>
+        <td>${item.product.price * item.quantity}</td>
+      </tr>
+    ));
   };
 
-  handleInputChange = event => {
-    const target = event.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
-    const name = target.name;
-    const updatedOrder = Object.assign({}, this.state.order, { [name]: value });
-    this.setState({
-      order: updatedOrder
-    });
+  const handleInputChange = event => {
+    const { name, value } = event.target;
+    setOrder(prevOrder => ({
+      ...prevOrder,
+      [name]: value
+    }));
   };
 
-  handlePlaceOrder = event => {
+  const handlePlaceOrder = event => {
     event.preventDefault();
-    console.log(this.state.order);
-    const items = this.props.cart.map(item => {
-      return {
-        productCode: item.product.id,
-        productName: item.product.title,
-        productPrice: item.product.price,
+    const orderWithItems = {
+      ...order,
+      items: cart.map(item => ({
+        productId: item.product.id,
         quantity: item.quantity
-      };
-    });
-    let orderObject = Object.assign({}, this.state.order, {
-      items: items
-    });
-    // console.log("orderObject", orderObject);
-    this.props.placeOrder(orderObject);
+      }))
+    };
+    dispatch(actions.placeOrder(orderWithItems));
   };
 
-  orderForm = () => {
-    return (
-      <form>
-        <div className="form-group">
-          <label htmlFor="customerName">Customer Name</label>
-          <input
-            type="text"
-            className="form-control"
-            id="customerName"
-            name="customerName"
-            value={this.state.customerName}
-            onChange={this.handleInputChange}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="customerEmail">Customer Email</label>
-          <input
-            type="email"
-            className="form-control"
-            id="customerEmail"
-            name="customerEmail"
-            value={this.state.customerEmail}
-            onChange={this.handleInputChange}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="deliveryAddress">Delivery Address</label>
-          <input
-            type="text"
-            className="form-control"
-            id="deliveryAddress"
-            name="deliveryAddress"
-            value={this.state.deliveryAddress}
-            onChange={this.handleInputChange}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="creditCardNumber">Credit Card Number</label>
-          <input
-            type="text"
-            className="form-control"
-            id="creditCardNumber"
-            name="creditCardNumber"
-            value={this.state.creditCardNumber}
-            onChange={this.handleInputChange}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="cvv">CVV</label>
-          <input
-            type="text"
-            className="form-control"
-            id="cvv"
-            name="cvv"
-            value={this.state.cvv}
-            onChange={this.handleInputChange}
-          />
-        </div>
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={this.handlePlaceOrder}
-        >
-          Place Order
-        </button>
-      </form>
-    );
-  };
-
-  checkoutForm = () => {
-    const isCartEmpty = this.props.cart.length === 0;
+  const checkoutForm = () => {
+    const isCartEmpty = cart.length === 0;
     if (isCartEmpty) {
       return (
         <div>
@@ -167,46 +64,124 @@ class CartContainer extends React.Component {
       );
     } else {
       return (
-        <div>
-          {this.cartItems()}
-          {isAuthenticated() && this.orderForm()}
-          {!isAuthenticated() &&
-          <div>
-              <h3>
-                  Please <NavLink to="/login">Login</NavLink> to place order
-              </h3>
+        <div className="row">
+          <div className="col-md-6">
+            <div className="card mb-4">
+              <div className="card-header">Items in Cart</div>
+              <div className="card-body">
+                <div className="table-responsive">
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th>Movie</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {cartItems()}
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <th colSpan="3" className="text-end">Total:</th>
+                        <th>${cartTotalAmount()}</th>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
           </div>
-          }
+
+          <div className="col-md-6">
+            {orderForm()}
+          </div>
         </div>
       );
     }
   };
-  render() {
+
+  const orderForm = () => {
     return (
-      <div className="row">
-        <div className="col-md-6 offset-md-2">
-            <div className="pb-3">
-              <h1>Cart</h1>
-              {this.checkoutForm()}
+      <div className="card">
+        <div className="card-header">Checkout</div>
+        <div className="card-body">
+          <form onSubmit={handlePlaceOrder}>
+            <div className="mb-3">
+              <label htmlFor="customerName" className="form-label">Name</label>
+              <input
+                type="text"
+                className="form-control"
+                id="customerName"
+                name="customerName"
+                value={order.customerName}
+                onChange={handleInputChange}
+                required
+              />
             </div>
+            <div className="mb-3">
+              <label htmlFor="customerEmail" className="form-label">Email</label>
+              <input
+                type="email"
+                className="form-control"
+                id="customerEmail"
+                name="customerEmail"
+                value={order.customerEmail}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="deliveryAddress" className="form-label">Delivery Address</label>
+              <textarea
+                className="form-control"
+                id="deliveryAddress"
+                name="deliveryAddress"
+                value={order.deliveryAddress}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="creditCardNumber" className="form-label">Credit Card Number</label>
+              <input
+                type="text"
+                className="form-control"
+                id="creditCardNumber"
+                name="creditCardNumber"
+                value={order.creditCardNumber}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="cvv" className="form-label">CVV</label>
+              <input
+                type="text"
+                className="form-control"
+                id="cvv"
+                name="cvv"
+                value={order.cvv}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <button type="submit" className="btn btn-primary w-100">
+              Place Order
+            </button>
+          </form>
         </div>
       </div>
     );
-  }
-}
-
-const mapStateToProps = state => {
-  const { cart } = state.cart;
-  return {
-    cart: cart
   };
+
+  return (
+    <div className="container">
+      <h2 className="my-4">Shopping Cart</h2>
+      {checkoutForm()}
+    </div>
+  );
 };
 
-const mapDispatchToProps = dispatch => ({
-  placeOrder: order => dispatch(actions.placeOrder(order))
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CartContainer);
+export default CartContainer;

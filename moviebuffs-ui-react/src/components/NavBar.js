@@ -1,92 +1,65 @@
 import React from "react";
-import {NavLink} from "react-router-dom";
-import {connect} from "react-redux";
-import {cleanState} from "../store/localStorage";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { cleanState } from "../store/localStorage";
 
-class NavBar extends React.Component {
+const NavBar = () => {
+  const cart = useSelector(state => state.cart.cart);
+  const user = useSelector(state => state.user);
+  const navigate = useNavigate();
 
-  cartItemsCount = () => {
-    return this.props.cart
+  const cartItemsCount = () => {
+    return cart
       .map(item => item.quantity)
       .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
   };
 
-  logoutHandler = () => {
-        cleanState();
-        window.location = "/";
-    };
+  const logoutHandler = () => {
+    cleanState();
+    navigate("/");
+    window.location.reload(); // Force reload to clear any remaining state
+  };
 
-  render() {
-      let authenticatedLinks;
+  const authenticatedLinks = user && user.access_token ? (
+    <>
+      <li className="nav-item">
+        <span className="nav-link">Welcome, {user.username}</span>
+      </li>
+      <li className="nav-item">
+        <button className="btn btn-link nav-link" onClick={logoutHandler}>Logout</button>
+      </li>
+    </>
+  ) : (
+    <li className="nav-item">
+      <Link className="nav-link" to="/login">Login</Link>
+    </li>
+  );
 
-      if (this.props.user && this.props.user.access_token) {
-          authenticatedLinks = (
-              <li className="nav-item">
-                  <NavLink className="nav-link" to="/login" onClick={this.logoutHandler}>
-                      Logout
-                  </NavLink>
-              </li>
-          );
-      } else {
-          authenticatedLinks = (
-              <li className="nav-item">
-                  <NavLink className="nav-link" to="/login">
-                      Login
-                  </NavLink>
-              </li>
-          );
-      }
-
-    return (
-      <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <NavLink className="navbar-brand" to="/">
-          MovieBuffs
-        </NavLink>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarCollapse"
-          aria-controls="navbarCollapse"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
+  return (
+    <nav className="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+      <div className="container">
+        <Link className="navbar-brand" to="/">MovieBuffs</Link>
+        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarCollapse">
-          <ul className="navbar-nav mr-auto">
-            {/*<li className="nav-item">
-              <NavLink className="nav-link" to="/">
-                Home <span className="sr-only">(current)</span>
-              </NavLink>
-            </li>*/}
+          <ul className="navbar-nav me-auto mb-2 mb-md-0">
+            <li className="nav-item">
+              <Link className="nav-link" to="/products">Home</Link>
+            </li>
           </ul>
           <ul className="navbar-nav">
+            {authenticatedLinks}
             <li className="nav-item">
-              <NavLink className="nav-link" to="/cart">
-                Cart ({this.cartItemsCount()})
-              </NavLink>
+              <Link className="nav-link" to="/cart">
+                <i className="bi bi-cart"></i> Cart {cartItemsCount() > 0 && `(${cartItemsCount()})`}
+              </Link>
             </li>
-              {authenticatedLinks}
           </ul>
         </div>
-      </nav>
-    );
-  }
-}
-
-const mapStateToProps = state => {
-  const { cart } = state.cart;
-  const { user } = state;
-  return {
-    cart: cart,
-    user: user
-  };
+      </div>
+    </nav>
+  );
 };
 
-const mapDispatchToProps = dispatch => ({});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(NavBar);
+export default NavBar;

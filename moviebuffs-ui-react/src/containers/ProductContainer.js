@@ -1,34 +1,25 @@
-import React from "react";
-import { connect } from "react-redux";
+import React, { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import * as actions from "../store/actions/index";
 import Product from "../components/Product";
 
-class ProductContainer extends React.Component {
-  componentDidMount() {
-    this.props.fetchProductById(this.props.match.params.id);
-  }
+const ProductContainer = () => {
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const product = useSelector(state => state.products.product);
 
-  render() {
-    return (
-        <Product product={this.props.product}
-                 onAddToCart={this.props.addProductToCart} />
-    );
-  }
-}
+  useEffect(() => {
+    dispatch(actions.fetchProductById(id));
+  }, [dispatch, id]);
 
-const mapStateToProps = state => {
-  const { product } = state.products;
-  return {
-    product: product
+  const addProductToCart = (product) => {
+    dispatch(actions.addProductToCart(product));
   };
+
+  return (
+    <Product product={product} onAddToCart={addProductToCart} />
+  );
 };
 
-const mapDispatchToProps = dispatch => ({
-  fetchProductById: (id) => dispatch(actions.fetchProductById(id)),
-  addProductToCart: product => dispatch(actions.addProductToCart(product))
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ProductContainer);
+export default ProductContainer;

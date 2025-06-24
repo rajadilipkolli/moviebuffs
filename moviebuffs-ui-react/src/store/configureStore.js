@@ -1,16 +1,15 @@
-import {applyMiddleware, createStore} from "redux";
-import thunkMiddleware from "redux-thunk";
-import {createLogger} from "redux-logger";
-import {loadState, saveState} from "./localStorage";
+import { configureStore } from '@reduxjs/toolkit';
+import { loadState, saveState } from "./localStorage";
 import rootReducer from "./reducers/index";
 
-const loggerMiddleware = createLogger();
 const persistedState = loadState();
 
-const store = createStore(
-    rootReducer,
-    persistedState,
-    applyMiddleware(thunkMiddleware, loggerMiddleware));
+const store = configureStore({
+  reducer: rootReducer,
+  preloadedState: persistedState,
+  middleware: (getDefaultMiddleware) => 
+    getDefaultMiddleware().concat(process.env.NODE_ENV !== 'production' ? require('redux-logger').createLogger() : [])
+});
 
 store.subscribe(() => {
   saveState(store.getState());

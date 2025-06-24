@@ -1,16 +1,19 @@
+import { createReducer } from '@reduxjs/toolkit';
 import * as actionTypes from "../actions/actionTypes";
 
-const user = (state = {}, action) => {
-    switch (action.type) {
-        case actionTypes.LOGIN_SUCCESS:
-            return action.payload || {};
-        case actionTypes.LOGIN_FAILURE:
-            return { loginError: true };
-        case actionTypes.LOGOUT:
-            return {};
-        default:
-            return state;
-    }
-};
+const initialState = {};
 
-export default user;
+const userReducer = createReducer(initialState, (builder) => {
+  builder
+    .addCase(actionTypes.LOGIN_SUCCESS, (state, action) => {
+      return action.payload || {};
+    })
+    .addCase(actionTypes.LOGIN_FAILURE, () => {
+      return { loginError: true };
+    })
+    .addCase(actionTypes.LOGOUT, () => {
+      return {};
+    });
+});
+
+export default userReducer;

@@ -1,83 +1,86 @@
-import React from "react";
-import {connect} from "react-redux";
-import queryString from 'query-string';
+import React, { useEffect, useState } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import * as actions from "../store/actions/index";
 import ProductList from "../components/ProductList";
-import GenreList from "../components/GenresList";
+import GenresList from "../components/GenresList";
 
-class ProductsContainer extends React.Component {
+const ProductsContainer = () => {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  
+  const products = useSelector(state => state.products.products);
+  const genres = useSelector(state => state.products.genres);
+    const [state, setState] = useState({
+    page: searchParams.get("page") || 1,
+    query: searchParams.get("query") || ""
+  });
+  
+  const loadMovies = React.useCallback((page, query) => {
+    dispatch(actions.fetchProducts({ page, query }));
+  }, [dispatch]);
+  
+  useEffect(() => {
+    dispatch(actions.fetchAllGenres());
+    loadMovies(state.page, state.query);
+  }, [dispatch, searchParams, loadMovies, state.page, state.query]); // Include all dependencies
 
-  constructor(props) {
-    super(props);
-    const values = queryString.parse(this.props.location.search);
-    this.state = {
-      page: values.page || 1,
-      query: values.query || ""
-    };
-  }
-
-  componentDidMount() {
-    //console.log('props',this.props)
-    //const page = this.props.match.params.page || 1;
-    this.props.fetchAllGenres();
-    this.loadMovies(this.state.page, this.state.query)
-  }
-
-  searchMovies = () => {
-    this.props.history.push('/products?page=1&query='+this.state.query);
-    this.loadMovies(1, this.state.query)
+  const searchMovies = () => {
+    navigate(`/products?page=1&query=${state.query}`);
+    loadMovies(1, state.query);
   };
 
-  loadMovies = (page, query) => {
-    //console.log('page: '+ page+", query: "+query);
-    this.props.fetchProducts(page, "", query);
+  const handleQueryChange = (e) => {
+    setState({ ...state, query: e.target.value });
   };
 
-  render() {
-    return (
-        <div className="row">
-          <div className="col-md-9">
-            <div>
-              <form className="form-inline pb-3" method="get" onSubmit={this.searchMovies}>
-                <div className="form-group  col-md-9">
-                  <input className="col-md-12 form-control" type="search" name="query"
-                         value={this.state.query}
-                         onChange={(e) => this.setState({query: e.target.value})}/>
-                </div>
-                <button className="btn btn-primary btn" type="submit">Search</button>
-              </form>
+  const handleAddToCart = (product) => {
+    dispatch(actions.addProductToCart(product));
+  };
+
+  return (
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-md-3">
+          <div className="card">
+            <div className="card-header">Search</div>
+            <div className="card-body">
+              <div className="input-group mb-3">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Search for movies"
+                  value={state.query}
+                  onChange={handleQueryChange}
+                  onKeyPress={(e) => e.key === "Enter" && searchMovies()}
+                />
+                <button className="btn btn-primary" onClick={searchMovies}>
+                  <i className="bi bi-search"></i>
+                </button>
+              </div>
             </div>
-
-            <ProductList
-              products={this.props.products}
-              basePath={"/products"}
-              query={this.state.query === ""? "": this.state.query}
-              onAddToCart={this.props.addProductToCart}
-            />
           </div>
-          <div className="col-md-3">
-              <GenreList genres={this.props.genres}/>
+
+          <div className="card mt-3">
+            <div className="card-header">Genres</div>
+            <div className="card-body">
+              <GenresList genres={genres} />
+            </div>
           </div>
         </div>
-    );
-  }
-}
 
-const mapStateToProps = state => {
-  const { products, genres } = state.products;
-  return {
-    products: products,
-    genres: genres
-  };
+        <div className="col-md-9">
+          <ProductList 
+            products={products} 
+            onAddToCart={handleAddToCart}
+            basePath="/products"
+            query={state.query}
+          />
+        </div>
+      </div>
+    </div>
+  );
 };
 
-const mapDispatchToProps = dispatch => ({
-  fetchProducts: (page, genre, query) => dispatch(actions.fetchProducts(page, genre, query)),
-  addProductToCart: product => dispatch(actions.addProductToCart(product)),
-  fetchAllGenres: () => dispatch(actions.fetchAllGenres())
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ProductsContainer);
+export default ProductsContainer;

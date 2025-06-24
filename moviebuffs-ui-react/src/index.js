@@ -1,9 +1,6 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import {Provider} from "react-redux";
-import {Router} from "react-router";
-//import {HashRouter} from "react-router-dom";
-import {createBrowserHistory} from "history";
+import { createRoot } from "react-dom/client";
+import { Provider } from "react-redux";
 import store from "./store/configureStore";
 import App from "./App";
 import "./index.css";
@@ -12,13 +9,13 @@ import 'bootstrap/dist/js/bootstrap.js';
 import 'jquery';
 import 'popper.js';
 
-export const history = createBrowserHistory();
+const container = document.getElementById("root");
+const root = createRoot(container);
 
-ReactDOM.render(
-  <Provider store={store}>
-    <Router history={history}>
+root.render(
+  <React.StrictMode>
+    <Provider store={store}>
       <App />
-    </Router>
-  </Provider>,
-  document.getElementById("root")
+    </Provider>
+  </React.StrictMode>
 );

@@ -1,51 +1,44 @@
+import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from "./axios";
 
 export const RECEIVE_PRODUCTS = "RECEIVE_PRODUCTS";
 export const RECEIVE_PRODUCT = "RECEIVE_PRODUCT";
 export const RECEIVE_ALL_GENRES = "RECEIVE_ALL_GENRES";
 
-export function fetchProducts(page, genre, query) {
-    let queryString = "?page="+page;
-    if(query !== "") {
-        queryString+="&query="+query;
-    }
-    if(genre !== "") {
-        queryString+="&genre="+genre;
-    }
-  return dispatch => {
-    return axios("/api/movies"+queryString)
-      .then(response => {
-        return dispatch({
-          type: RECEIVE_PRODUCTS,
-          payload: response.data
-        });
-      })
-      .catch(e => console.log("error", e));
-  };
-}
+export const receiveProducts = createAction(RECEIVE_PRODUCTS);
+export const receiveProduct = createAction(RECEIVE_PRODUCT);
+export const receiveAllGenres = createAction(RECEIVE_ALL_GENRES);
 
-export function fetchProductById(id) {
-    return dispatch => {
-        return axios("/api/movies/"+id)
-            .then(response => {
-                return dispatch({
-                    type: RECEIVE_PRODUCT,
-                    payload: response.data
-                });
-            })
-            .catch(e => console.log("error", e));
-    };
-}
+export const fetchProducts = createAsyncThunk(
+  'products/fetchProducts',
+  async ({ page, genre = "", query = "" }, { dispatch }) => {
+    let queryString = `?page=${page}`;
+    if (query !== "") {
+      queryString += `&query=${query}`;
+    }
+    if (genre !== "") {
+      queryString += `&genre=${genre}`;
+    }
+    const response = await axios.get(`/api/movies${queryString}`);
+    dispatch(receiveProducts(response.data));
+    return response.data;
+  }
+);
 
-export function fetchAllGenres() {
-    return dispatch => {
-        return axios("/api/genres")
-            .then(response => {
-                return dispatch({
-                    type: RECEIVE_ALL_GENRES,
-                    payload: response.data
-                });
-            })
-            .catch(e => console.log("error", e));
-    };
-}
+export const fetchProductById = createAsyncThunk(
+  'products/fetchProductById',
+  async (id, { dispatch }) => {
+    const response = await axios.get(`/api/movies/${id}`);
+    dispatch(receiveProduct(response.data));
+    return response.data;
+  }
+);
+
+export const fetchAllGenres = createAsyncThunk(
+  'products/fetchAllGenres',
+  async (_, { dispatch }) => {
+    const response = await axios.get("/api/genres");
+    dispatch(receiveAllGenres(response.data));
+    return response.data;
+  }
+);
