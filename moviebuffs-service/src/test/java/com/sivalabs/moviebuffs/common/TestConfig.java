@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 public class TestConfig {
 
 	@Bean
-	public MeterRegistry registry() {
+	MeterRegistry registry() {
 		return new SimpleMeterRegistry(SimpleConfig.DEFAULT, new MockClock());
 	}
 
