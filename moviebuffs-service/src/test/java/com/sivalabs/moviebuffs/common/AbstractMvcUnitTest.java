@@ -4,12 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sivalabs.moviebuffs.config.security.TokenHelper;
 import com.sivalabs.moviebuffs.core.service.SecurityService;
 import com.sivalabs.moviebuffs.core.utils.Constants;
-import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @ActiveProfiles(Constants.PROFILE_TEST)
@@ -22,13 +21,13 @@ public abstract class AbstractMvcUnitTest {
 	@Autowired
 	protected ObjectMapper objectMapper;
 
-	@MockBean
+	@MockitoBean
 	protected UserDetailsService userDetailsService;
 
-	@MockBean
+	@MockitoBean
 	protected TokenHelper tokenHelper;
 
-	@MockBean
+	@MockitoBean
 	protected SecurityService securityService;
 
 }

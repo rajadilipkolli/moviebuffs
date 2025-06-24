@@ -32,10 +32,12 @@ class OrderRestControllerIT extends AbstractIntegrationTest {
 
 	@BeforeEach
 	void setUp() {
+		// Clear existing orders
+		orderRepository.deleteAll();
 		orderList = new ArrayList<>();
-		orderList.add(createOrder(1L));
-		orderList.add(createOrder(2L));
-		orderList.add(createOrder(3L));
+		orderList.add(createOrder());
+		orderList.add(createOrder());
+		orderList.add(createOrder());
 
 		orderList = orderRepository.saveAll(orderList);
 	}

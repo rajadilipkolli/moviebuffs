@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -54,8 +56,7 @@ public class WebSecurityConfig {
 
 		@Bean
 		public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-			http
-				// .antMatcher("/api/**")
+			http.securityMatcher("/api/**")
 				.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(requests -> requests
 					.requestMatchers("/api/auth/**", "/api/users/**", "/swagger-ui.html", "/swagger-ui/**",
@@ -71,7 +72,7 @@ public class WebSecurityConfig {
 
 			http.csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**")
 				// don't apply CSRF protection to /h2-console
-				.disable()).headers(headers -> headers.frameOptions(options -> options.sameOrigin()));
+				.disable()).headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 			// allow use of frame to same origin urls
 			return http.build();
 		}
@@ -79,13 +80,15 @@ public class WebSecurityConfig {
 	}
 
 	@Configuration
+	@Order(2)
 	public static class FormLoginWebSecurityConfiguration {
 
 		@Bean
 		public SecurityFilterChain formFilterChain(HttpSecurity http) throws Exception {
-			http.csrf(csrf -> csrf.disable())
+			http.securityMatcher("/**")
+				.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(requests -> requests
-					.requestMatchers("/resources/**", "/webjars/**", "/registration", "/forgot-password",
+					.requestMatchers("/", "/resources/**", "/webjars/**", "/registration", "/forgot-password",
 							"/reset-password", "/static/**", "/js/**", "/css/**", "/images/**", "/favicon.ico",
 							"/h2-console/**")
 					.permitAll())

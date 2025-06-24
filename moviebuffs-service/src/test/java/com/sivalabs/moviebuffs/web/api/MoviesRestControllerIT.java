@@ -1,7 +1,6 @@
 package com.sivalabs.moviebuffs.web.api;
 
 import com.sivalabs.moviebuffs.common.AbstractIntegrationTest;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.test.context.support.WithMockUser;
 
@@ -29,7 +28,6 @@ class MoviesRestControllerIT extends AbstractIntegrationTest {
 	}
 
 	@Test
-	@Disabled
 	void should_fetch_movie_by_id() throws Exception {
 		this.mockMvc.perform(get(MOVIES_SINGLE_BASE_PATH, 1)).andExpect(status().isOk());
 	}
