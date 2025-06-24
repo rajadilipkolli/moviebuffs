@@ -43,9 +43,8 @@ public class TestDataFactory {
 		return movie;
 	}
 
-	public static Order createOrder(Long id) {
+	public static Order createOrder() {
 		Order order = new Order();
-		order.setId(id);
 		order.setOrderId(UUID.randomUUID().toString());
 		order.setStatus(Order.OrderStatus.NEW);
 		order.setCustomerName("customer 1");
@@ -61,6 +60,12 @@ public class TestDataFactory {
 		User createdBy = new User();
 		createdBy.setId(1L);
 		order.setCreatedBy(createdBy);
+		return order;
+	}
+
+	public static Order createOrder(Long id) {
+		Order order = createOrder();
+		order.setId(id);
 		return order;
 	}
 
