@@ -10,13 +10,19 @@ jest.mock('../../store/actions/index', () => ({
   addProductToCart: jest.fn()
 }));
 
+// Mock URLSearchParams for different test scenarios
+const mockURLSearchParams = {
+  default: new URLSearchParams({ page: "2" }),
+  withQuery: new URLSearchParams({ page: "1", query: "test" })
+};
+
 // Mock react-router-dom hooks
 const mockNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockNavigate,
   useSearchParams: () => [
-    new URLSearchParams({ page: "2" }),
+    mockURLSearchParams.default,
     jest.fn()
   ]
 }));
@@ -46,6 +52,12 @@ describe('ProductsContainer Component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     
+    // Reset the search params to default
+    jest.requireMock('react-router-dom').useSearchParams = () => [
+      mockURLSearchParams.default,
+      jest.fn()
+    ];
+    
     // Mock action implementations
     actions.fetchProducts.mockImplementation((params) => ({
       type: 'MOCK_FETCH_PRODUCTS',
@@ -72,15 +84,11 @@ describe('ProductsContainer Component', () => {
   });
   
   test('fetches products with query parameter when search is performed', async () => {
-    // Mock the useSearchParams to return a query param
-    jest.mock('react-router-dom', () => ({
-      ...jest.requireActual('react-router-dom'),
-      useNavigate: () => mockNavigate,
-      useSearchParams: () => [
-        new URLSearchParams({ page: "1", query: "test" }),
-        jest.fn()
-      ]
-    }));
+    // Set the useSearchParams mock to return with query param for this test
+    jest.requireMock('react-router-dom').useSearchParams = () => [
+      mockURLSearchParams.withQuery,
+      jest.fn()
+    ];
     
     render(<ProductsContainer />, { preloadedState: mockState });
     
@@ -92,7 +100,7 @@ describe('ProductsContainer Component', () => {
       })
     );
   });
-  
+    
   test('navigates to a new URL with page 1 when search is performed', () => {
     render(<ProductsContainer />, { preloadedState: mockState });
     
@@ -100,8 +108,12 @@ describe('ProductsContainer Component', () => {
     const searchInput = screen.getByPlaceholderText('Search for movies');
     fireEvent.change(searchInput, { target: { value: 'new test' } });
     
-    // Click search button
-    const searchButton = screen.getByRole('button');
+    // Click search button - using a more specific query to get the search button
+    const searchButton = screen.getByRole('button', { 
+      name: '', // Empty name since the button contains just an icon
+      // Finding the button that's closest to the search input
+      // or you could specify a test ID in the component and use getByTestId
+    });
     fireEvent.click(searchButton);
     
     // Verify navigation was called with correct URL

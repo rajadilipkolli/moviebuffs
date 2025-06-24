@@ -16,7 +16,8 @@ on:
 
 jobs:
   build:
-
+    timeout-minutes: 10
+    name: Build and Test React App
     runs-on: ubuntu-latest
     defaults:
       run:

@@ -12,20 +12,14 @@ const ProductsByGenreContainer = () => {
   
   const products = useSelector(state => state.products.products);
   const genres = useSelector(state => state.products.genres);
-    const [state, setState] = useState({
-    page: searchParams.get("page") || 1,
-    query: searchParams.get("query") || "",
-    genre: searchParams.get("genre") || ""
-  });
   
-  // Update state when URL parameters change
-  useEffect(() => {
-    setState({
-      page: searchParams.get("page") || 1,
-      query: searchParams.get("query") || "",
-      genre: searchParams.get("genre") || ""
-    });
-  }, [searchParams]);
+  // Get values directly from searchParams for data fetching
+  const page = searchParams.get("page") || 1;
+  const genre = searchParams.get("genre") || "";
+  const queryParam = searchParams.get("query") || "";
+  
+  // Local state only for the search input field which can change without affecting the URL
+  const [searchQuery, setSearchQuery] = useState(queryParam);
   
   const loadMovies = React.useCallback((page, genre, query) => {
     dispatch(actions.fetchProducts({ page, genre, query }));
@@ -33,16 +27,15 @@ const ProductsByGenreContainer = () => {
   
   useEffect(() => {
     dispatch(actions.fetchAllGenres());
-    loadMovies(state.page, state.genre, state.query);
-  }, [dispatch, loadMovies, state.page, state.genre, state.query]); // Removed searchParams as it's now handled by the new effect
-
+    loadMovies(page, genre, queryParam);
+  }, [dispatch, loadMovies, page, genre, queryParam]);
   const searchMovies = () => {
-    navigate(`/genres?genre=${state.genre}&query=${state.query}&page=1`);
-    loadMovies(1, state.genre, state.query);
+    navigate(`/genres?genre=${genre}&query=${searchQuery}&page=1`);
+    loadMovies(1, genre, searchQuery);
   };
 
   const handleQueryChange = (e) => {
-    setState({ ...state, query: e.target.value });
+    setSearchQuery(e.target.value);
   };
 
   const handleAddToCart = (product) => {
@@ -61,7 +54,7 @@ const ProductsByGenreContainer = () => {
                   type="text"
                   className="form-control"
                   placeholder="Search for movies"
-                  value={state.query}
+                  value={searchQuery}
                   onChange={handleQueryChange}
                   onKeyPress={(e) => e.key === "Enter" && searchMovies()}
                 />
@@ -85,8 +78,8 @@ const ProductsByGenreContainer = () => {
             products={products} 
             onAddToCart={handleAddToCart}
             basePath="/genres"
-            genre={state.genre}
-            query={state.query}
+            genre={genre}
+            query={queryParam}
           />
         </div>
       </div>
