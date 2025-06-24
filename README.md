@@ -9,7 +9,7 @@
 * Spring Data JPA
 * Spring Security JWT Authentication
 * Jasypt
-* Swagger2
+* Swagger3
 * Flyway
 * SonarQube
 * Jacoco
@@ -34,11 +34,11 @@
 
 ### Run Backend tests
 
-`moviebuffs/moviebuffs> ./mvnw clean verify`
+`moviebuffs/moviebuffs-service> ./mvnw clean verify`
 
 ### Run application locally
 
-`moviebuffs/moviebuffs> ./mvnw clean package -Pci & java -jar target/bookmarker-0.0.1-SNAPSHOT.jar`
+`moviebuffs/moviebuffs-service> ./mvnw clean package -Pci & java -jar target/bookmarker-0.0.1-SNAPSHOT.jar`
 
 * Application: http://localhost:8080/
 

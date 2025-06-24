@@ -1,7 +1,6 @@
 package com.sivalabs.moviebuffs.config.security;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -23,17 +22,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true, proxyTargetClass = true)
-@RequiredArgsConstructor
 public class WebSecurityConfig {
-
-	private final UserDetailsService userDetailsService;
-
-	private final PasswordEncoder passwordEncoder;
-
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
-	}
 
 	@Configuration
 	@Order(1)
@@ -47,15 +36,14 @@ public class WebSecurityConfig {
 		private final TokenHelper tokenHelper;
 
 		@Bean
-		public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-			AuthenticationManagerBuilder authenticationManagerBuilder = http
-				.getSharedObject(AuthenticationManagerBuilder.class);
-			authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
-			return authenticationManagerBuilder.build();
+		AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+			AuthenticationManagerBuilder authManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+			authManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+			return authManagerBuilder.build();
 		}
 
 		@Bean
-		public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 			http.securityMatcher("/api/**")
 				.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(requests -> requests
@@ -84,7 +72,7 @@ public class WebSecurityConfig {
 	public static class FormLoginWebSecurityConfiguration {
 
 		@Bean
-		public SecurityFilterChain formFilterChain(HttpSecurity http) throws Exception {
+		SecurityFilterChain formFilterChain(HttpSecurity http) throws Exception {
 			http.securityMatcher("/**")
 				.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(requests -> requests
