@@ -9,7 +9,7 @@
 * Spring Data JPA
 * Spring Security JWT Authentication
 * Jasypt
-* Swagger3
+* OpenApi 3
 * Flyway
 * SonarQube
 * Jacoco
@@ -38,7 +38,7 @@
 
 ### Run application locally
 
-`moviebuffs/moviebuffs-service> ./mvnw clean package -Pci & java -jar target/bookmarker-0.0.1-SNAPSHOT.jar`
+`moviebuffs/moviebuffs-service> ./mvnw clean package -Pci & java -jar target/moviebuffs-service-0.0.1-SNAPSHOT.jar`
 
 * Application: http://localhost:8080/
 

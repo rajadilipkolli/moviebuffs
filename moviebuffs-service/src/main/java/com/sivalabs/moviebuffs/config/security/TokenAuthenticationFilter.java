@@ -1,6 +1,7 @@
 package com.sivalabs.moviebuffs.config.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,8 +21,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 	private final UserDetailsService userDetailsService;
 
 	@Override
-	public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-			throws IOException, ServletException {
+	public void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+			@NonNull FilterChain chain) throws IOException, ServletException {
 
 		String authToken = tokenHelper.getToken(request);
 
