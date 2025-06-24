@@ -1,12 +1,19 @@
 {
   "extends": [
-    "config:base"
+    "config:recommended"
   ],
-  "includeForks": true,
-  "labels": ["dependencies"],
+  "forkProcessing": "enabled",
+  "labels": [
+    "dependencies"
+  ],
   "packageRules": [
     {
-      "updateTypes": ["minor", "patch", "pin", "digest"],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
       "automerge": true
     }
   ]
