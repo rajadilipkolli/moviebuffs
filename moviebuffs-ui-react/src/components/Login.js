@@ -1,65 +1,67 @@
-import React, {useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {Redirect} from "react-router-dom";
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import * as actions from "../store/actions/index";
 
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-
+    const [formSubmitted, setFormSubmitted] = useState(false);
+    
     const user = useSelector(state => state.user);
     const dispatch = useDispatch();
-    const [formSubmitted, setFormSubmitted] = useState(false);
+    const navigate = useNavigate();
+    
     const handleLogin = e => {
         e.preventDefault();
-        if (!username.trim() || !password.trim()) {
-            return;
-        }
-        dispatch(actions.login({ username: username, password: password }));
         setFormSubmitted(true);
+        dispatch(actions.login({ username, password }));
     };
-    //console.log('access_token', user.access_token)
+
     if (user.access_token) {
-        return <Redirect to="/" />;
+        navigate("/products");
+        return null;
     }
+
     return (
-        <div className="container col-md-6 pb-3">
-            <div className="card">
-                <div className="card-header text-center">
-                    <h3>Login Form</h3>
-                </div>
-                <div className="card-body">
-                    <form onSubmit={e => handleLogin(e)} className="row justify-content-center">
-                        {formSubmitted && user.loginError &&
-                            <div>
-                                <p className="text-danger">Invalid credentials. Please try again.</p>
+        <div className="row justify-content-center">
+            <div className="col-md-6">
+                <div className="card">
+                    <div className="card-body">
+                        <h1 className="card-title text-center">Login</h1>
+                        <form onSubmit={handleLogin}>
+                            <div className="form-group mb-3">
+                                <label htmlFor="username">Username</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="username"
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
+                                    required
+                                />
                             </div>
-                        }
-                        <div className="form-group col-md-10">
-                            <label htmlFor="email">Email</label>
-                            <input
-                                id="email"
-                                className="form-control col-md-12"
-                                value={username}
-                                onChange={e => setUsername(e.target.value)}
-                            />
-                        </div>
-                        <div className="form-group col-md-10">
-                            <label htmlFor="password">Password</label>
-                            <input
-                                id="password"
-                                className="form-control col-md-12"
-                                type="password"
-                                value={password}
-                                onChange={e => setPassword(e.target.value)}
-                            />
-                        </div>
-                        <div className="form-group col-md-10">
-                            <button type="submit" className="btn btn-primary">
+                            <div className="form-group mb-3">
+                                <label htmlFor="password">Password</label>
+                                <input
+                                    type="password"
+                                    className="form-control"
+                                    id="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <button type="submit" className="btn btn-primary w-100">
                                 Login
                             </button>
-                        </div>
-                    </form>
+                            {formSubmitted && user.loginError && (
+                                <div className="alert alert-danger mt-3">
+                                    Invalid username or password.
+                                </div>
+                            )}
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

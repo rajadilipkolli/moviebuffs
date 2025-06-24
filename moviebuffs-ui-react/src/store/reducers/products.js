@@ -1,27 +1,23 @@
-import {RECEIVE_ALL_GENRES, RECEIVE_PRODUCT, RECEIVE_PRODUCTS} from "../actions/products";
+import { createReducer } from '@reduxjs/toolkit';
+import { RECEIVE_ALL_GENRES, RECEIVE_PRODUCT, RECEIVE_PRODUCTS } from "../actions/products";
 
 const initialState = {
   genres: [],
   products: { data: [] },
   product: {}
 };
-function reducer(state = initialState, action) {
-  switch (action.type) {
-    case RECEIVE_PRODUCTS:
-      return Object.assign({}, state, {
-        products: action.payload
-      });
-    case RECEIVE_ALL_GENRES:
-      return Object.assign({}, state, {
-        genres: action.payload
-      });
-    case RECEIVE_PRODUCT:
-      return Object.assign({}, state, {
-        product: action.payload
-      });
-    default:
-      return state;
-  }
-}
 
-export default reducer;
+const productsReducer = createReducer(initialState, (builder) => {
+  builder
+    .addCase(RECEIVE_PRODUCTS, (state, action) => {
+      state.products = action.payload;
+    })
+    .addCase(RECEIVE_ALL_GENRES, (state, action) => {
+      state.genres = action.payload;
+    })
+    .addCase(RECEIVE_PRODUCT, (state, action) => {
+      state.product = action.payload;
+    });
+});
+
+export default productsReducer;
