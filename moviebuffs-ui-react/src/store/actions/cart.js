@@ -17,7 +17,9 @@ export const placeOrder = createAsyncThunk(
     const response = await axios.post("/api/orders", orderObject);
     dispatch(orderCreationSuccess(response.data));
     dispatch(clearCart());
-    history.navigate("/orderconfirmation/" + response.data.orderId);
+    if (history && history.navigate) {
+      history.navigate("/orderconfirmation/" + response.data.orderId);
+    }
     return response.data;
   }
 );

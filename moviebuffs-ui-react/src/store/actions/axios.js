@@ -11,18 +11,20 @@ apiUrl = apiUrl || configApiUrl;
 console.log("Effective REACT_APP_API_BASE_URL from env: " + apiUrl);
 instance.defaults.baseURL = apiUrl;
 
-// Set the AUTH token for any request
+// Add request logging
 instance.interceptors.request.use(function(config) {
     const accessToken = getAccessToken();
     if (!config.headers.Authorization && accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;
     }
+    console.log(`API Request: ${config.method.toUpperCase()} ${config.baseURL}${config.url}`);
     return config;
 });
 
 // Add a response interceptor
 instance.interceptors.response.use(
     function(response) {
+        console.log(`API Response: ${response.status} ${response.config.method.toUpperCase()} ${response.config.url}`);
         return response;
     },
     function(error) {

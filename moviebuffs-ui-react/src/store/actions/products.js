@@ -12,13 +12,18 @@ export const receiveAllGenres = createAction(RECEIVE_ALL_GENRES);
 export const fetchProducts = createAsyncThunk(
   'products/fetchProducts',
   async ({ page, genre = "", query = "" }, { dispatch }) => {
-    let queryString = `?page=${page}`;
+    // Ensure page is a number
+    const pageNum = parseInt(page, 10) || 1;
+    
+    let queryString = `?page=${pageNum}`;
     if (query !== "") {
       queryString += `&query=${query}`;
     }
     if (genre !== "") {
       queryString += `&genre=${genre}`;
     }
+    
+    console.log(`Fetching products with: page=${pageNum}, genre=${genre}, query=${query}`);
     const response = await axios.get(`/api/movies${queryString}`);
     dispatch(receiveProducts(response.data));
     return response.data;

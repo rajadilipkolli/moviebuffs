@@ -17,6 +17,14 @@ const ProductsContainer = () => {
     query: searchParams.get("query") || ""
   });
   
+  // Update state when URL parameters change
+  useEffect(() => {
+    setState({
+      page: searchParams.get("page") || 1,
+      query: searchParams.get("query") || ""
+    });
+  }, [searchParams]);
+  
   const loadMovies = React.useCallback((page, query) => {
     dispatch(actions.fetchProducts({ page, query }));
   }, [dispatch]);
@@ -24,7 +32,7 @@ const ProductsContainer = () => {
   useEffect(() => {
     dispatch(actions.fetchAllGenres());
     loadMovies(state.page, state.query);
-  }, [dispatch, searchParams, loadMovies, state.page, state.query]); // Include all dependencies
+  }, [dispatch, loadMovies, state.page, state.query]); // Removed searchParams as it's now handled by the new effect
 
   const searchMovies = () => {
     navigate(`/products?page=1&query=${state.query}`);

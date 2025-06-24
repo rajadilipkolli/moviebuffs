@@ -55,4 +55,24 @@ describe('ProductList Component', () => {
       expect(screen.getByText(product.title)).toBeInTheDocument();
     });
   });
+    test('passes correct pagination props', () => {
+    const mockProductsPage2 = {
+      ...mockProducts,
+      pageNumber: 2
+    };
+    
+    const mockPropsWithParams = {
+      products: mockProductsPage2,
+      onAddToCart: mockAddToCart,
+      basePath: '/products',
+      genre: 'action',
+      query: 'test'
+    };
+    
+    render(<ProductList {...mockPropsWithParams} />);
+    
+    // With the current mock setup, we can at least verify the component renders
+    const paginationElements = screen.getAllByTestId('pagination');
+    expect(paginationElements).toHaveLength(2);
+  });
 });

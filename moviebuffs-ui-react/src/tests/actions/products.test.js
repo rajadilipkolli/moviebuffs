@@ -76,6 +76,27 @@ describe('Product Actions', () => {
     // Check that dispatch was called with correct action
     expect(dispatch).toHaveBeenCalledWith(productActions.receiveProducts(products));
   });
+  
+  test('fetchProducts should handle string page parameter correctly', async () => {
+    // Test with page as a string value, as it would come from URL parameters
+    const params = { page: "2" };
+    const products = { 
+      data: [{ id: '3', title: 'Test Movie 3' }],
+      pageNumber: 2,
+      totalPages: 10
+    };
+    
+    axios.get.mockResolvedValue({ data: products });
+    
+    const thunkFunction = productActions.fetchProducts(params);
+    await thunkFunction(dispatch, () => {});
+    
+    // Check that axios.get was called with correct URL - page=2 should be passed
+    expect(axios.get).toHaveBeenCalledWith('/api/movies?page=2');
+    
+    // Check that dispatch was called with correct action
+    expect(dispatch).toHaveBeenCalledWith(productActions.receiveProducts(products));
+  });
 
   test('fetchProductById should call API and dispatch action', async () => {
     const productId = '123';
@@ -109,5 +130,56 @@ describe('Product Actions', () => {
     
     // Check that dispatch was called with correct action
     expect(dispatch).toHaveBeenCalledWith(productActions.receiveAllGenres(genres));
+  });
+
+  test('fetchProducts should properly handle route changes with different page parameters', async () => {
+    // First page request
+    let params = { page: "1" };
+    let products = { 
+      data: [{ id: '1', title: 'Test Movie 1' }],
+      pageNumber: 1,
+      totalPages: 10
+    };
+    
+    axios.get.mockResolvedValue({ data: products });
+    
+    let thunkFunction = productActions.fetchProducts(params);
+    await thunkFunction(dispatch, () => {});
+    
+    expect(axios.get).toHaveBeenCalledWith('/api/movies?page=1');
+    
+    // Simulate route change to page 2
+    params = { page: "2" };
+    products = { 
+      data: [{ id: '2', title: 'Test Movie 2' }],
+      pageNumber: 2,
+      totalPages: 10
+    };
+    
+    axios.get.mockReset();
+    axios.get.mockResolvedValue({ data: products });
+    
+    thunkFunction = productActions.fetchProducts(params);
+    await thunkFunction(dispatch, () => {});
+    
+    // Verify correct page parameter is sent to API
+    expect(axios.get).toHaveBeenCalledWith('/api/movies?page=2');
+    
+    // Simulate route change to page 3 with additional parameters
+    params = { page: "3", genre: "action", query: "test" };
+    products = { 
+      data: [{ id: '3', title: 'Test Movie 3' }],
+      pageNumber: 3,
+      totalPages: 10
+    };
+    
+    axios.get.mockReset();
+    axios.get.mockResolvedValue({ data: products });
+    
+    thunkFunction = productActions.fetchProducts(params);
+    await thunkFunction(dispatch, () => {});
+    
+    // Verify correct parameters are sent to API
+    expect(axios.get).toHaveBeenCalledWith('/api/movies?page=3&query=test&genre=action');
   });
 });
