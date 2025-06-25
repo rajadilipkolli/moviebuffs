@@ -55,6 +55,8 @@ public class WebSecurityConfig {
 					.authenticated()
 					.requestMatchers("/api/users/**")
 					.permitAll()
+					.requestMatchers(HttpMethod.GET, "/api/genres/**", "/api/movies/**")
+					.permitAll()
 					.anyRequest()
 					.authenticated())
 				.addFilterBefore(new TokenAuthenticationFilter(tokenHelper, userDetailsService),
