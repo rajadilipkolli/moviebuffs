@@ -10,8 +10,9 @@ import org.springframework.stereotype.Component;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.Date;
+import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.SecretKey;
 
 @Component
 @RequiredArgsConstructor
@@ -50,7 +51,7 @@ public class TokenHelper {
 			refreshedToken = Jwts.builder()
 				.setClaims(claims)
 				.setExpiration(generateExpirationDate())
-				.signWith(SIGNATURE_ALGORITHM, securityConfigProperties.getJwt().getSecret())
+				.signWith(getSigningKey(), SIGNATURE_ALGORITHM)
 				.compact();
 		}
 		catch (Exception e) {
@@ -66,19 +67,14 @@ public class TokenHelper {
 			.setAudience(AUDIENCE_WEB)
 			.setIssuedAt(timeProvider.now())
 			.setExpiration(generateExpirationDate())
-			.signWith(SIGNATURE_ALGORITHM,
-					Base64.getEncoder()
-						.encodeToString(securityConfigProperties.getJwt().getSecret().getBytes(StandardCharsets.UTF_8)))
+			.signWith(getSigningKey(), SIGNATURE_ALGORITHM)
 			.compact();
 	}
 
 	private Claims getAllClaimsFromToken(String token) {
 		Claims claims;
 		try {
-			claims = Jwts.parser()
-				.setSigningKey(securityConfigProperties.getJwt().getSecret())
-				.parseClaimsJws(token)
-				.getBody();
+			claims = Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
 		}
 		catch (Exception e) {
 			claims = null;
@@ -105,6 +101,11 @@ public class TokenHelper {
 
 	private String getAuthHeaderFromHeader(HttpServletRequest request) {
 		return request.getHeader(securityConfigProperties.getJwt().getHeader());
+	}
+
+	private SecretKey getSigningKey() {
+		byte[] keyBytes = securityConfigProperties.getJwt().getSecret().getBytes(StandardCharsets.UTF_8);
+		return new SecretKeySpec(keyBytes, SIGNATURE_ALGORITHM.getJcaName());
 	}
 
 }
