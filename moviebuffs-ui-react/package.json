@@ -14,7 +14,7 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-redux": "9.2.0",
-    "react-router-dom": "6.30.1",
+    "react-router-dom": "7.6.3",
     "react-scripts": "5.0.1",
     "redux": "5.0.1",
     "redux-logger": "3.0.6"
@@ -31,10 +31,13 @@
   },
   "jest": {
     "moduleNameMapper": {
-      "^axios$": "<rootDir>/node_modules/axios/dist/axios.js"
+      "^axios$": "<rootDir>/node_modules/axios/dist/axios.js",
+      "^react-router-dom$": "<rootDir>/node_modules/react-router-dom/dist/index.js",
+      "^react-router$": "<rootDir>/node_modules/react-router/dist/development/index.js",
+      "^react-router/dom$": "<rootDir>/node_modules/react-router/dist/development/dom-export.js"
     },
     "transformIgnorePatterns": [
-      "/node_modules/(?!axios|@testing-library)"
+      "node_modules/(?!(@testing-library|react-router|react-router-dom|@remix-run))"
     ]
   },
   "browserslist": {

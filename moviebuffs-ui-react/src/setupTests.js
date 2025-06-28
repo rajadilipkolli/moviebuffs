@@ -4,6 +4,11 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
 
+// Polyfills for React Router v7
+import { TextEncoder, TextDecoder } from 'util';
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
+
 // Mock localStorage for tests
 const localStorageMock = {
   getItem: jest.fn(),
@@ -27,11 +32,4 @@ console.warn = jest.fn();
 console.log = jest.fn();
 
 // Setup mock for react-router-dom
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => jest.fn(),
-  useParams: () => ({ id: '1', orderId: '1' }),
-  useSearchParams: () => [
-    { get: (param) => param === 'page' ? '1' : param === 'genre' ? 'action' : '' }
-  ],
-}));
+// Mock will be handled individually in test files
