@@ -2,7 +2,7 @@ package com.sivalabs.moviebuffs.config.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -11,7 +11,8 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import javax.crypto.spec.SecretKeySpec;
+import java.util.HashMap;
+import java.util.Map;
 import javax.crypto.SecretKey;
 
 @Component
@@ -23,8 +24,6 @@ public class TokenHelper {
 	private final TimeProvider timeProvider;
 
 	private static final String AUDIENCE_WEB = "web";
-
-	private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
 
 	public String getUsernameFromToken(String token) {
 		String username;
@@ -42,17 +41,15 @@ public class TokenHelper {
 
 	public String refreshToken(String token) {
 		String refreshedToken;
-		Date a = timeProvider.now();
+		Date now = timeProvider.now();
 		try {
 			final Claims claims = this.getAllClaimsFromToken(token);
 			if (claims == null)
 				return null;
-			claims.setIssuedAt(a);
-			refreshedToken = Jwts.builder()
-				.setClaims(claims)
-				.setExpiration(generateExpirationDate())
-				.signWith(getSigningKey(), SIGNATURE_ALGORITHM)
-				.compact();
+			Map<String, Object> refreshedClaims = new HashMap<>(claims);
+			refreshedClaims.put(Claims.ISSUED_AT, now);
+			refreshedClaims.put(Claims.EXPIRATION, generateExpirationDate());
+			refreshedToken = Jwts.builder().claims(refreshedClaims).signWith(getSigningKey()).compact();
 		}
 		catch (Exception e) {
 			refreshedToken = null;
@@ -62,19 +59,21 @@ public class TokenHelper {
 
 	public String generateToken(String username) {
 		return Jwts.builder()
-			.setIssuer(securityConfigProperties.getJwt().getIssuer())
-			.setSubject(username)
-			.setAudience(AUDIENCE_WEB)
-			.setIssuedAt(timeProvider.now())
-			.setExpiration(generateExpirationDate())
-			.signWith(getSigningKey(), SIGNATURE_ALGORITHM)
+			.subject(username)
+			.issuer(securityConfigProperties.getJwt().getIssuer())
+			.issuedAt(timeProvider.now())
+			.expiration(generateExpirationDate())
+			.audience()
+			.add(AUDIENCE_WEB)
+			.and()
+			.signWith(getSigningKey())
 			.compact();
 	}
 
 	private Claims getAllClaimsFromToken(String token) {
 		Claims claims;
 		try {
-			claims = Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
+			claims = Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token).getPayload();
 		}
 		catch (Exception e) {
 			claims = null;
@@ -105,7 +104,7 @@ public class TokenHelper {
 
 	private SecretKey getSigningKey() {
 		byte[] keyBytes = securityConfigProperties.getJwt().getSecret().getBytes(StandardCharsets.UTF_8);
-		return new SecretKeySpec(keyBytes, SIGNATURE_ALGORITHM.getJcaName());
+		return Keys.hmacShaKeyFor(keyBytes);
 	}
 
 }
