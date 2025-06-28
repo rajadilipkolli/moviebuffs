@@ -1,0 +1,21 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "SeleniumTests",
+            "request": "launch",
+            "mainClass": "com.sivalabs.moviebuffs.tools.testing.SeleniumTests",
+            "projectName": "moviebuffs-tools"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-MovieBuffsApplication<moviebuffs-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.sivalabs.moviebuffs.MovieBuffsApplication",
+            "projectName": "moviebuffs-service",
+            "args": "--spring.profiles.active=local",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

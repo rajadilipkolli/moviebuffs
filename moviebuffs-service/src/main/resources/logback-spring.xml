@@ -39,13 +39,13 @@
         </encoder>
     </appender>
 
-    <springProfile name="docker">
+    <springProfile name="docker,local">
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="stash"/>
         </root>
     </springProfile>
-    <springProfile name="!docker">
+    <springProfile name="!docker,!local">
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="FILE"/>
