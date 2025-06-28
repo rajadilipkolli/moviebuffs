@@ -23,7 +23,7 @@
             <h3 th:text="${header}">Header</h3>
             <hr/>
         </div>
-        <div th:replace="fragments/pagination :: pagination"> </div>
+        <div th:replace="~{fragments/pagination :: pagination}"> </div>
         <div class="row row-cols-1 row-cols-md-4">
             <div class="col mb-3" th:each="movie: ${moviesData.content}">
                 <div class="card h-100" >
