@@ -1,7 +1,10 @@
 package moviebuffs
 
 import io.gatling.core.Predef._
+import io.gatling.core.feeder.BatchableFeederBuilder
+import io.gatling.core.structure.{ChainBuilder, ScenarioBuilder}
 import io.gatling.http.Predef._
+import io.gatling.http.protocol.HttpProtocolBuilder
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
@@ -9,7 +12,7 @@ import scala.util.Random
 
 class OrderCreationSimulation extends Simulation {
 
-  val httpConf = http
+  val httpConf: HttpProtocolBuilder = http
     .baseUrl("http://localhost:18080")
     .acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
     .doNotTrackHeader("1")
@@ -18,7 +21,7 @@ class OrderCreationSimulation extends Simulation {
     .userAgentHeader("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:16.0) Gecko/20100101 Firefox/16.0")
 
   // Now, we can write the scenario as a composition
-  val scnCreateOrder = scenario("Create Order").exec(Order.create).pause(2)
+  val scnCreateOrder: ScenarioBuilder = scenario("Create Order").exec(Order.create).pause(2)
 
   setUp(
     scnCreateOrder.inject(rampUsers(500) during  (10 seconds))
@@ -32,16 +35,16 @@ class OrderCreationSimulation extends Simulation {
 }
 
 object Order {
-  val searchFeeder = csv("data/search.csv").random
-  val genreFeeder = csv("data/genres.csv").random
-  val productFeeder = csv("data/products.csv").random
+  val searchFeeder: BatchableFeederBuilder[String] = csv("data/search.csv").random
+  val genreFeeder: BatchableFeederBuilder[String] = csv("data/genres.csv").random
+  val productFeeder: BatchableFeederBuilder[String] = csv("data/products.csv").random
 
-  val credentialsFeeder = csv("data/credentials.csv").random
-  var randomString = Iterator.continually(Map("randstring" -> ( Random.alphanumeric.take(20).mkString )))
-  var randomQuantity = Iterator.continually(Map("randomQuantity" -> ( Random.nextInt(4) + 1 )))
+  val credentialsFeeder: BatchableFeederBuilder[String] = csv("data/credentials.csv").random
+  var randomString: Iterator[Map[String, String]] = Iterator.continually(Map("randstring" -> Random.alphanumeric.take(20).mkString))
+  var randomQuantity: Iterator[Map[String, Int]] = Iterator.continually(Map("randomQuantity" -> ( Random.nextInt(4) + 1 )))
 
   var token = ""
-  val login = feed(credentialsFeeder)
+  val login: ChainBuilder = feed(credentialsFeeder)
     .exec(http("Login")
       .post("/api/auth/login")
       .body(StringBody(
@@ -59,7 +62,7 @@ object Order {
     })
     .pause(1)
 
-  val createOrder = feed(randomQuantity)
+  val createOrder: ChainBuilder = feed(randomQuantity)
       .feed(productFeeder)
       .feed(randomString)
       .exec(
@@ -69,7 +72,7 @@ object Order {
       )
       .pause(1)
 
-  val create =
+  val create: ChainBuilder =
     exec(login)
     .pause(2)
     .exec(createOrder)

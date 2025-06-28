@@ -1,14 +1,17 @@
 package moviebuffs
 
 import io.gatling.core.Predef._
+import io.gatling.core.feeder.BatchableFeederBuilder
+import io.gatling.core.structure.{ChainBuilder, ScenarioBuilder}
 import io.gatling.http.Predef._
+import io.gatling.http.protocol.HttpProtocolBuilder
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
 class MovieBuffsAPISimulation extends Simulation {
 
-  val httpConf = http
+  val httpConf: HttpProtocolBuilder = http
     .baseUrl("http://localhost:18080")
     .acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
     .doNotTrackHeader("1")
@@ -17,7 +20,7 @@ class MovieBuffsAPISimulation extends Simulation {
     .userAgentHeader("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:16.0) Gecko/20100101 Firefox/16.0")
 
   // Now, we can write the scenario as a composition
-  val scnBrowseProducts = scenario("Browse Products")
+  val scnBrowseProducts: ScenarioBuilder = scenario("Browse Products")
     .during(30 minutes, "Counter") {
       exec(Browse.products).pause(2)
     }
@@ -34,33 +37,33 @@ class MovieBuffsAPISimulation extends Simulation {
 }
 
 object Browse {
-  val searchFeeder = csv("data/search.csv").random
-  val genreFeeder = csv("data/genres.csv").random
+  val searchFeeder: BatchableFeederBuilder[String] = csv("data/search.csv").random
+  val genreFeeder: BatchableFeederBuilder[String] = csv("data/genres.csv").random
 
-  val searchInGenre =
+  val searchInGenre: ChainBuilder =
     feed(genreFeeder)
     .feed(searchFeeder)
     .exec(http("Search Products By Genre")
     .get("/api/movies?genre=${genre}&query=${key}"))
     .pause(3)
 
-  val byGenre = feed(genreFeeder)
+  val byGenre: ChainBuilder = feed(genreFeeder)
     .exec(http("Products By Genre")
       .get("/api/movies?genre=${genre}"))
     .pause(3)
 
-  val search = feed(searchFeeder)
+  val search: ChainBuilder = feed(searchFeeder)
     .exec(http("Search")
       .get("/api/movies?query=${key}"))
     .pause(3)
 
-  val gotoPage = repeat(5, "n") {
+  val gotoPage: ChainBuilder = repeat(5, "n") {
     exec{ session => session.set("pageNo", session("n").as[Int] + 1) }
     .exec(http("Products Page ${pageNo}").get("/api/movies?page=${pageNo}"))
     .pause(1)
   }
 
-  val products =
+  val products: ChainBuilder =
     exec(gotoPage)
       .exec(search)
       .exec(byGenre)
