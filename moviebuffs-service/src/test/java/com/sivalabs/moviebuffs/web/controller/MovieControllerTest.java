@@ -35,6 +35,8 @@ class MovieControllerTest extends AbstractMvcUnitTest {
 	void shouldShowHomePage() throws Exception {
 		Page<Movie> page = new PageImpl<>(new ArrayList<>());
 		given(movieService.findMovies(any(Pageable.class))).willReturn(page);
+		// Mock genres for @ModelAttribute("genres")
+		given(movieService.findAllGenres(any())).willReturn(new ArrayList<>());
 		this.mockMvc.perform(get("/")).andExpect(status().isOk()).andExpect(view().name("home"));
 	}
 

@@ -6,11 +6,11 @@ import com.sivalabs.moviebuffs.core.service.MovieService;
 import com.sivalabs.moviebuffs.web.mappers.MovieDTOMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -25,10 +25,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = MoviesRestController.class)
 class MoviesRestControllerTest extends AbstractMvcUnitTest {
 
-	@MockBean
+	@MockitoBean
 	private MovieService movieService;
 
-	@MockBean
+	@MockitoBean
 	private MovieDTOMapper movieDTOMapper;
 
 	@Test
