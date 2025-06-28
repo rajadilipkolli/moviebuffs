@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen } from '../utils/test-utils';
 import ProductContainer from '../../containers/ProductContainer';
 import * as actions from '../../store/actions/index';
+import { useParams } from 'react-router-dom';
 
 // Mock the actions
 jest.mock('../../store/actions/index', () => ({
@@ -25,6 +26,12 @@ jest.mock('../../components/Product', () => {
     );
   };
 });
+
+// Mock useParams to return the expected id
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useParams: () => ({ id: '1' })
+}));
 
 describe('ProductContainer Component', () => {
   const mockProduct = {
