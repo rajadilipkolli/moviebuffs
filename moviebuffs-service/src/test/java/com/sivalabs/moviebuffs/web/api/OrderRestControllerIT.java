@@ -2,14 +2,10 @@ package com.sivalabs.moviebuffs.web.api;
 
 import com.sivalabs.moviebuffs.common.AbstractIntegrationTest;
 import com.sivalabs.moviebuffs.core.entity.Order;
-import com.sivalabs.moviebuffs.core.repository.OrderRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.TestPropertySource;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,11 +18,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@TestPropertySource(properties = { "application.import-tmdb-data=false" })
 class OrderRestControllerIT extends AbstractIntegrationTest {
-
-	@Autowired
-	private OrderRepository orderRepository;
 
 	private List<Order> orderList = null;
 

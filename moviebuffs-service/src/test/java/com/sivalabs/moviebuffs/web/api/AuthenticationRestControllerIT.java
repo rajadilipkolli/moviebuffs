@@ -1,35 +1,19 @@
 package com.sivalabs.moviebuffs.web.api;
 
 import com.sivalabs.moviebuffs.common.AbstractIntegrationTest;
-import com.sivalabs.moviebuffs.config.security.SecurityConfigProperties;
-import com.sivalabs.moviebuffs.config.security.TokenHelper;
 import com.sivalabs.moviebuffs.core.entity.User;
-import com.sivalabs.moviebuffs.core.service.UserService;
 import com.sivalabs.moviebuffs.datafactory.TestDataFactory;
 import com.sivalabs.moviebuffs.web.dto.AuthenticationRequestDTO;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.TestPropertySource;
-
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@TestPropertySource(properties = { "application.import-tmdb-data=false" })
 class AuthenticationRestControllerIT extends AbstractIntegrationTest {
-
-	@Autowired
-	private UserService userService;
-
-	@Autowired
-	private TokenHelper tokenHelper;
-
-	@Autowired
-	private SecurityConfigProperties securityConfigProperties;
 
 	@Test
 	void should_login_successfully_with_valid_credentials() throws Exception {

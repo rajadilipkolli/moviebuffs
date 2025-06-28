@@ -2,24 +2,16 @@ package com.sivalabs.moviebuffs.web.api;
 
 import com.sivalabs.moviebuffs.common.AbstractIntegrationTest;
 import com.sivalabs.moviebuffs.core.entity.User;
-import com.sivalabs.moviebuffs.core.service.UserService;
 import com.sivalabs.moviebuffs.datafactory.TestDataFactory;
 import com.sivalabs.moviebuffs.web.dto.ChangePasswordDTO;
 import com.sivalabs.moviebuffs.web.dto.CreateUserRequestDTO;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.TestPropertySource;
-
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@TestPropertySource(properties = { "application.import-tmdb-data=false" })
 class UserRestControllerIT extends AbstractIntegrationTest {
-
-	@Autowired
-	private UserService userService;
 
 	@Test
 	void should_find_user_by_id() throws Exception {
