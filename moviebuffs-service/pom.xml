@@ -22,7 +22,7 @@
 		<spring-cloud.version>2025.0.0</spring-cloud.version>
 		<logstash-logback.version>8.1</logstash-logback.version>
 		<commons-io.version>2.20.0</commons-io.version>
-		<opencsv.version>5.11.2</opencsv.version>
+		<opencsv.version>5.12.0</opencsv.version>
 		<jjwt.version>0.12.6</jjwt.version>
 		<heroku.appName>sivalabs-moviebuffs</heroku.appName>
 		<p6spy.starter.version>1.12.0</p6spy.starter.version>
