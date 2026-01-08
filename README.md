@@ -20,6 +20,11 @@
 * Axios
 * Font-awesome
 
+## Notes for Upgrading to SpringBoot 4
+* Migration to modular spring starters
+* Migration to Jackson 3
+* Migration of Spring Batch to latest framework
+
 ## Notes for Upgrading to SpringBoot 3
 * Migration of namespace from javax to jakarta
 * Migration of security to not use SpringWebConfigureAdaptor

@@ -3,18 +3,24 @@ package com.sivalabs.moviebuffs.dataimporter.config;
 import com.opencsv.CSVIterator;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
+import org.springframework.batch.infrastructure.item.ExecutionContext;
 import org.springframework.batch.infrastructure.item.ItemReader;
 import org.springframework.batch.infrastructure.item.ItemStream;
+import org.springframework.batch.infrastructure.item.ItemStreamException;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpenCsvItemReader implements ItemReader<MovieCsvRecord>, ItemStream {
 
 	private final CSVIterator csvIterator;
 
 	private final CSVReader csvReader;
+
+	private static final Logger logger = LoggerFactory.getLogger(OpenCsvItemReader.class);
 
 	public OpenCsvItemReader(Resource inputResource, int skipLines) throws IOException, CsvValidationException {
 		InputStreamReader inputStreamReader = new InputStreamReader(inputResource.getInputStream());
@@ -62,6 +68,16 @@ public class OpenCsvItemReader implements ItemReader<MovieCsvRecord>, ItemStream
 	}
 
 	@Override
+	public void open(ExecutionContext executionContext) throws ItemStreamException {
+		// Initialization logic if needed
+	}
+
+	@Override
+	public void update(ExecutionContext executionContext) throws ItemStreamException {
+		// Update logic if needed (can be empty)
+	}
+
+	@Override
 	public void close() {
 		try {
 			if (csvReader != null) {
@@ -69,7 +85,7 @@ public class OpenCsvItemReader implements ItemReader<MovieCsvRecord>, ItemStream
 			}
 		}
 		catch (IOException e) {
-			// log warning
+			logger.warn("Failed to close csvReader", e);
 		}
 	}
 

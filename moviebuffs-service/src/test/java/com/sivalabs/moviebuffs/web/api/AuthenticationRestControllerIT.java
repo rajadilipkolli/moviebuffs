@@ -7,6 +7,7 @@ import com.sivalabs.moviebuffs.web.dto.AuthenticationRequestDTO;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -59,6 +60,32 @@ class AuthenticationRestControllerIT extends AbstractIntegrationTest {
 			.perform(post("/api/auth/refresh").header(securityConfigProperties.getJwt().getHeader(),
 					"Bearer invalid-token"))
 			.andExpect(status().isForbidden());
+	}
+
+	@Test
+	void should_return_400_when_username_is_blank() throws Exception {
+		AuthenticationRequestDTO dto = new AuthenticationRequestDTO("", "password");
+		this.mockMvc
+			.perform(post("/api/auth/login").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto)))
+			.andExpect(status().isBadRequest());
+	}
+
+	@Test
+	void should_return_400_when_password_is_blank() throws Exception {
+		AuthenticationRequestDTO dto = new AuthenticationRequestDTO("user@example.com", "");
+		this.mockMvc
+			.perform(post("/api/auth/login").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto)))
+			.andExpect(status().isBadRequest());
+	}
+
+	@Test
+	void should_return_400_when_username_and_password_are_null() throws Exception {
+		// Create JSON with nulls explicitly
+		String json = "{\"username\":null,\"password\":null}";
+		this.mockMvc.perform(post("/api/auth/login").contentType(MediaType.APPLICATION_JSON).content(json))
+			.andExpect(status().isBadRequest());
 	}
 
 	@Test

@@ -12,8 +12,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
-
 import java.util.ArrayList;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -28,9 +26,6 @@ class MovieControllerTest extends AbstractMvcUnitTest {
 
 	@MockitoBean
 	private MovieService movieService;
-
-	@MockitoSpyBean
-	private MovieDTOMapper movieDTOMapper;
 
 	@Test
 	@WithMockUser
