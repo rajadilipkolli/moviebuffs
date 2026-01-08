@@ -3,7 +3,7 @@ package com.sivalabs.moviebuffs.dataimporter.config;
 import com.opencsv.exceptions.CsvValidationException;
 import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.builder.JobBuilder;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.job.parameters.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.Step;
 import org.springframework.batch.core.step.builder.StepBuilder;
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
-import org.springframework.transaction.PlatformTransactionManager;
 
 import java.io.IOException;
 
@@ -21,14 +20,12 @@ import java.io.IOException;
 public class BatchConfig {
 
     private final JobRepository jobRepository;
-    private final PlatformTransactionManager transactionManager;
 
     @Value("classpath:/data/movies_metadata_small.csv")
     private Resource inputResource;
 
-    public BatchConfig(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+    public BatchConfig(JobRepository jobRepository) {
         this.jobRepository = jobRepository;
-        this.transactionManager = transactionManager;
     }
 
     @Bean
@@ -42,7 +39,7 @@ public class BatchConfig {
     @Bean
     Step step() throws IOException, CsvValidationException {
         return new StepBuilder("execution-step", jobRepository)
-                .<MovieCsvRecord, MovieCsvRecord>chunk(5, transactionManager)
+                .<MovieCsvRecord, MovieCsvRecord>chunk(5)
                 .reader(reader())
                 //.processor(processor())
                 .writer(writer())

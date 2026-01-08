@@ -7,7 +7,7 @@ import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.JobExecution;
 import org.springframework.batch.core.job.parameters.JobParameters;
 import org.springframework.batch.core.job.parameters.JobParametersBuilder;
-import org.springframework.batch.test.JobLauncherTestUtils;
+import org.springframework.batch.test.JobOperatorTestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MoviebuffsDataImporterApplicationTests extends AbstractIntegrationTest {
 
     @Autowired
-    private JobLauncherTestUtils jobLauncherTestUtils;
+    private JobOperatorTestUtils jobOperatorTestUtils;
 
     @Autowired
     private Job importMovieDataJob;
@@ -29,7 +29,7 @@ class MoviebuffsDataImporterApplicationTests extends AbstractIntegrationTest {
     @Test
     void shouldImportMovieData() throws Exception {
         // Set the job for the test
-        jobLauncherTestUtils.setJob(importMovieDataJob);
+        jobOperatorTestUtils.setJob(importMovieDataJob);
 
         // Given
         JobParameters jobParameters = new JobParametersBuilder()
@@ -37,7 +37,7 @@ class MoviebuffsDataImporterApplicationTests extends AbstractIntegrationTest {
                 .toJobParameters();
 
         // When
-        JobExecution jobExecution = jobLauncherTestUtils.launchJob(jobParameters);
+        JobExecution jobExecution = jobOperatorTestUtils.launchJob(jobParameters);
 
         // Then
         assertThat(jobExecution.getStatus()).isEqualTo(BatchStatus.COMPLETED);

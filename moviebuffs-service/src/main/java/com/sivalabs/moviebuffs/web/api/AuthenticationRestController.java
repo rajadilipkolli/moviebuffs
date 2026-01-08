@@ -43,8 +43,8 @@ public class AuthenticationRestController {
 
 	@PostMapping(value = "/login")
 	public AuthenticationResponseDTO createAuthenticationToken(@RequestBody AuthenticationRequestDTO credentials) {
-		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword()));
+		Authentication authentication = authenticationManager
+			.authenticate(new UsernamePasswordAuthenticationToken(credentials.username(), credentials.password()));
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 

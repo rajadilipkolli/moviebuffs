@@ -21,11 +21,7 @@ class UserRestControllerIT extends AbstractIntegrationTest {
 
 	@Test
 	void should_create_new_user_with_valid_data() throws Exception {
-		CreateUserRequestDTO createUserRequestDTO = CreateUserRequestDTO.builder()
-			.email("myemail@gmail.com")
-			.password("secret")
-			.name("myname")
-			.build();
+		CreateUserRequestDTO createUserRequestDTO = new CreateUserRequestDTO("myname", "myemail@gmail.com", "secret");
 
 		this.mockMvc
 			.perform(post("/api/users").contentType(APPLICATION_JSON)
@@ -36,11 +32,7 @@ class UserRestControllerIT extends AbstractIntegrationTest {
 
 	@Test
 	void should_fail_to_create_new_user_with_existing_email() throws Exception {
-		CreateUserRequestDTO createUserRequestDTO = CreateUserRequestDTO.builder()
-			.email("admin@gmail.com")
-			.password("secret")
-			.name("myname")
-			.build();
+		CreateUserRequestDTO createUserRequestDTO = new CreateUserRequestDTO("admin@gmail.com", "secret", "myname");
 
 		this.mockMvc
 			.perform(post("/api/users").contentType(APPLICATION_JSON)
@@ -114,10 +106,7 @@ class UserRestControllerIT extends AbstractIntegrationTest {
 	@Test
 	@WithMockUser("siva@gmail.com")
 	void should_update_password_when_user_is_authorized() throws Exception {
-		ChangePasswordDTO changePasswordDTO = ChangePasswordDTO.builder()
-			.oldPassword("siva")
-			.newPassword("newpwd")
-			.build();
+		ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO("siva", "newpwd");
 
 		this.mockMvc
 			.perform(post("/api/users/change-password").contentType(APPLICATION_JSON)
@@ -128,10 +117,7 @@ class UserRestControllerIT extends AbstractIntegrationTest {
 
 	@Test
 	void should_fail_to_update_password_when_user_is_not_authorized() throws Exception {
-		ChangePasswordDTO changePasswordDTO = ChangePasswordDTO.builder()
-			.oldPassword("admin")
-			.newPassword("newpwd")
-			.build();
+		ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO("admin", "newpwd");
 
 		this.mockMvc
 			.perform(post("/api/users/change-password").contentType(APPLICATION_JSON)

@@ -1,6 +1,5 @@
 package com.sivalabs.moviebuffs.importer;
 
-import tools.jackson.databind.ObjectMapper;
 import com.opencsv.CSVIterator;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
@@ -22,10 +21,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.sivalabs.moviebuffs.core.utils.TimeUtils.millisToLongDHMS;
@@ -41,11 +46,11 @@ public class MovieDataImporter {
 
 	private final DataImportProperties dataImportProperties;
 
-	private final ObjectMapper objectMapper;
+	private final JsonMapper objectMapper;
 
 	private static final int MAX_CAST_MEMBERS_PER_MOVIE = 10;
 
-	private static final List<String> CREW_JOBS_TO_IMPORT = Arrays.asList("PRODUCER", "DIRECTOR");
+	private static final List<String> CREW_JOBS_TO_IMPORT = List.of("PRODUCER", "DIRECTOR");
 
 	@Async
 	public void importDataAsync() throws IOException, CsvValidationException {

@@ -18,10 +18,8 @@ class AuthenticationRestControllerIT extends AbstractIntegrationTest {
 	@Test
 	void should_login_successfully_with_valid_credentials() throws Exception {
 		User user = createUser();
-		AuthenticationRequestDTO authenticationRequestDTO = AuthenticationRequestDTO.builder()
-			.username(user.getEmail())
-			.password(user.getPassword())
-			.build();
+		AuthenticationRequestDTO authenticationRequestDTO = new AuthenticationRequestDTO(user.getEmail(),
+				user.getPassword());
 
 		this.mockMvc
 			.perform(post("/api/auth/login").contentType(APPLICATION_JSON)
@@ -32,10 +30,8 @@ class AuthenticationRestControllerIT extends AbstractIntegrationTest {
 	@Test
 	@Disabled
 	void should_not_login_with_invalid_credentials() throws Exception {
-		AuthenticationRequestDTO authenticationRequestDTO = AuthenticationRequestDTO.builder()
-			.username("nonexisting@gmail.com")
-			.password("secret")
-			.build();
+		AuthenticationRequestDTO authenticationRequestDTO = new AuthenticationRequestDTO("nonexisting@gmail.com",
+				"secret");
 
 		this.mockMvc
 			.perform(post("/api/auth/login").contentType(APPLICATION_JSON)

@@ -6,6 +6,7 @@ import com.sivalabs.moviebuffs.core.service.MovieService;
 import com.sivalabs.moviebuffs.web.mappers.MovieDTOMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @WebMvcTest(controllers = MovieController.class)
+@Import({ MovieDTOMapper.class })
 class MovieControllerTest extends AbstractMvcUnitTest {
 
 	@MockitoBean

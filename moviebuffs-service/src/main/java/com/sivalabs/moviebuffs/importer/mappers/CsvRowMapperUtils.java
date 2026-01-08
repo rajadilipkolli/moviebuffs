@@ -1,6 +1,5 @@
 package com.sivalabs.moviebuffs.importer.mappers;
 
-import tools.jackson.databind.ObjectMapper;
 import com.sivalabs.moviebuffs.core.entity.CastMember;
 import com.sivalabs.moviebuffs.core.entity.CrewMember;
 import com.sivalabs.moviebuffs.core.entity.Genre;
@@ -12,19 +11,24 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.math.BigDecimal;
 import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Random;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Arrays;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 @Component
 @RequiredArgsConstructor
 public class CsvRowMapperUtils {
 
-	private final ObjectMapper objectMapper;
+	private final JsonMapper objectMapper;
 
 	private static final Random random = new Random();
 
