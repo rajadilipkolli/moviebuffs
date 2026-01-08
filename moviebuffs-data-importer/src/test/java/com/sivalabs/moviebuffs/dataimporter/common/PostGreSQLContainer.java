@@ -9,10 +9,10 @@ import org.testcontainers.utility.DockerImageName;
 @TestConfiguration(proxyBeanMethods = false)
 public class PostGreSQLContainer {
 
-    @ServiceConnection
-    @Bean
-    PostgreSQLContainer postgreSQLContainer() {
-        return new PostgreSQLContainer(DockerImageName.parse("postgres").withTag("18-alpine")).withReuse(true);
-    }
+	@ServiceConnection
+	@Bean
+	PostgreSQLContainer postgreSQLContainer() {
+		return new PostgreSQLContainer(DockerImageName.parse("postgres").withTag("18-alpine")).withReuse(true);
+	}
 
 }

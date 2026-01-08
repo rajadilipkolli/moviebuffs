@@ -12,62 +12,65 @@ import java.io.InputStreamReader;
 
 public class OpenCsvItemReader implements ItemReader<MovieCsvRecord>, ItemStream {
 
-    private final CSVIterator csvIterator;
-    private final CSVReader csvReader;
+	private final CSVIterator csvIterator;
 
-    public OpenCsvItemReader(Resource inputResource, int skipLines) throws IOException, CsvValidationException {
-        InputStreamReader inputStreamReader = new InputStreamReader(inputResource.getInputStream());
-        this.csvReader = new CSVReader(inputStreamReader);
-        csvReader.skip(skipLines);
-        this.csvIterator = new CSVIterator(csvReader);
-    }
+	private final CSVReader csvReader;
 
-    @Override
-    public MovieCsvRecord read() {
-        if (csvIterator.hasNext()) {
-            String[] nextLine = csvIterator.next();
-            return parseMovieRecord(nextLine);
-        }
-        return null;
-    }
+	public OpenCsvItemReader(Resource inputResource, int skipLines) throws IOException, CsvValidationException {
+		InputStreamReader inputStreamReader = new InputStreamReader(inputResource.getInputStream());
+		this.csvReader = new CSVReader(inputStreamReader);
+		csvReader.skip(skipLines);
+		this.csvIterator = new CSVIterator(csvReader);
+	}
 
-    private MovieCsvRecord parseMovieRecord(String[] nextLine) {
-        return MovieCsvRecord.builder()
-                .adult(nextLine[0])
-                .belongsToCollection(nextLine[1])
-                .budget(nextLine[2])
-                .genres(nextLine[3])
-                .homepage(nextLine[4])
-                .id(nextLine[5])
-                .imdbId(nextLine[6])
-                .originalLanguage(nextLine[7])
-                .originalTitle(nextLine[8])
-                .overview(nextLine[9])
-                .popularity(nextLine[10])
-                .posterPath(nextLine[11])
-                .productionCompanies(nextLine[12])
-                .productionCountries(nextLine[13])
-                .releaseDate(nextLine[14])
-                .revenue(nextLine[15])
-                .runtime(nextLine[16])
-                .spokenLanguages(nextLine[17])
-                .status(nextLine[18])
-                .tagline(nextLine[19])
-                .title(nextLine[20])
-                .video(nextLine[21])
-                .voteAverage(nextLine[22])
-                .voteCount(nextLine[23])
-                .build();
-    }
+	@Override
+	public MovieCsvRecord read() {
+		if (csvIterator.hasNext()) {
+			String[] nextLine = csvIterator.next();
+			return parseMovieRecord(nextLine);
+		}
+		return null;
+	}
 
-    @Override
-    public void close() {
-        try {
-            if (csvReader != null) {
-                    csvReader.close();
-            }
-        } catch (IOException e) {
-                // log warning
-        }
-    }
+	private MovieCsvRecord parseMovieRecord(String[] nextLine) {
+		return MovieCsvRecord.builder()
+			.adult(nextLine[0])
+			.belongsToCollection(nextLine[1])
+			.budget(nextLine[2])
+			.genres(nextLine[3])
+			.homepage(nextLine[4])
+			.id(nextLine[5])
+			.imdbId(nextLine[6])
+			.originalLanguage(nextLine[7])
+			.originalTitle(nextLine[8])
+			.overview(nextLine[9])
+			.popularity(nextLine[10])
+			.posterPath(nextLine[11])
+			.productionCompanies(nextLine[12])
+			.productionCountries(nextLine[13])
+			.releaseDate(nextLine[14])
+			.revenue(nextLine[15])
+			.runtime(nextLine[16])
+			.spokenLanguages(nextLine[17])
+			.status(nextLine[18])
+			.tagline(nextLine[19])
+			.title(nextLine[20])
+			.video(nextLine[21])
+			.voteAverage(nextLine[22])
+			.voteCount(nextLine[23])
+			.build();
+	}
+
+	@Override
+	public void close() {
+		try {
+			if (csvReader != null) {
+				csvReader.close();
+			}
+		}
+		catch (IOException e) {
+			// log warning
+		}
+	}
+
 }

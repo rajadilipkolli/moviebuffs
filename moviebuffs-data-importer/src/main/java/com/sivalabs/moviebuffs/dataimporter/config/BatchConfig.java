@@ -21,46 +21,45 @@ import java.io.IOException;
 @Configuration
 public class BatchConfig {
 
-    private static final Logger log = LoggerFactory.getLogger(BatchConfig.class);
-    
-    private final JobRepository jobRepository;
+	private static final Logger log = LoggerFactory.getLogger(BatchConfig.class);
 
-    @Value("classpath:/data/movies_metadata_small.csv")
-    private Resource inputResource;
+	private final JobRepository jobRepository;
 
-    public BatchConfig(JobRepository jobRepository) {
-        this.jobRepository = jobRepository;
-    }
+	@Value("classpath:/data/movies_metadata_small.csv")
+	private Resource inputResource;
 
-    @Bean
-    Job importMovieDataJob() throws IOException, CsvValidationException {
-        return new JobBuilder("importMovieDataJob", jobRepository)
-                .incrementer(new RunIdIncrementer())
-                .start(step())
-                .build();
-    }
+	public BatchConfig(JobRepository jobRepository) {
+		this.jobRepository = jobRepository;
+	}
 
-    @Bean
-    Step step() throws IOException, CsvValidationException {
-        return new StepBuilder("execution-step", jobRepository)
-                .<MovieCsvRecord, MovieCsvRecord>chunk(5)
-                .reader(reader())
-                //.processor(processor())
-                .writer(writer())
-                .build();
-    }
+	@Bean
+	Job importMovieDataJob() throws IOException, CsvValidationException {
+		return new JobBuilder("importMovieDataJob", jobRepository).incrementer(new RunIdIncrementer())
+			.start(step())
+			.build();
+	}
 
-    @Bean
-    ItemReader<MovieCsvRecord> reader() throws IOException, CsvValidationException {
-        return new OpenCsvItemReader(inputResource, 1);
-    }
+	@Bean
+	Step step() throws IOException, CsvValidationException {
+		return new StepBuilder("execution-step", jobRepository).<MovieCsvRecord, MovieCsvRecord>chunk(5)
+			.reader(reader())
+			// .processor(processor())
+			.writer(writer())
+			.build();
+	}
 
-    @Bean
-    ItemWriter<MovieCsvRecord> writer() {
-        return items -> {
-            for (MovieCsvRecord record : items) {
-                log.info("Movie :{}", record);
-            }
-        };
-    }
+	@Bean
+	ItemReader<MovieCsvRecord> reader() throws IOException, CsvValidationException {
+		return new OpenCsvItemReader(inputResource, 1);
+	}
+
+	@Bean
+	ItemWriter<MovieCsvRecord> writer() {
+		return items -> {
+			for (MovieCsvRecord record : items) {
+				log.info("Movie :{}", record);
+			}
+		};
+	}
+
 }

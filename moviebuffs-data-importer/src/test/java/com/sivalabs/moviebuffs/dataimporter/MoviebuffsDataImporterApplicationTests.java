@@ -12,34 +12,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 class MoviebuffsDataImporterApplicationTests extends AbstractIntegrationTest {
 
-    @Autowired
-    private JobOperatorTestUtils jobOperatorTestUtils;
+	@Autowired
+	private JobOperatorTestUtils jobOperatorTestUtils;
 
-    @Autowired
-    private Job importMovieDataJob;
+	@Autowired
+	private Job importMovieDataJob;
 
-    @Test
-    void contextLoads() {
-        assertThat(mockMvc).isNotNull();
-    }
+	@Test
+	void contextLoads() {
+		assertThat(mockMvc).isNotNull();
+	}
 
-    @Test
-    void shouldImportMovieData() throws Exception {
-        // Set the job for the test
-        jobOperatorTestUtils.setJob(importMovieDataJob);
+	@Test
+	void shouldImportMovieData() throws Exception {
+		// Set the job for the test
+		jobOperatorTestUtils.setJob(importMovieDataJob);
 
-        // Given
-        JobParameters jobParameters = new JobParametersBuilder()
-                .addString("jobId", String.valueOf(System.currentTimeMillis()))
-                .toJobParameters();
+		// Given
+		JobParameters jobParameters = new JobParametersBuilder()
+			.addString("jobId", String.valueOf(System.currentTimeMillis()))
+			.toJobParameters();
 
-        // When
-        JobExecution jobExecution = jobOperatorTestUtils.startJob(jobParameters);
+		// When
+		JobExecution jobExecution = jobOperatorTestUtils.startJob(jobParameters);
 
-        // Then
-        assertThat(jobExecution.getStatus()).isEqualTo(BatchStatus.COMPLETED);
-    }
+		// Then
+		assertThat(jobExecution.getStatus()).isEqualTo(BatchStatus.COMPLETED);
+	}
+
 }
