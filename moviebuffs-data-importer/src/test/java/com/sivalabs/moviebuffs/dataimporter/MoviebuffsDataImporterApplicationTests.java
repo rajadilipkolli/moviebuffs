@@ -37,7 +37,7 @@ class MoviebuffsDataImporterApplicationTests extends AbstractIntegrationTest {
                 .toJobParameters();
 
         // When
-        JobExecution jobExecution = jobOperatorTestUtils.launchJob(jobParameters);
+        JobExecution jobExecution = jobOperatorTestUtils.startJob(jobParameters);
 
         // Then
         assertThat(jobExecution.getStatus()).isEqualTo(BatchStatus.COMPLETED);

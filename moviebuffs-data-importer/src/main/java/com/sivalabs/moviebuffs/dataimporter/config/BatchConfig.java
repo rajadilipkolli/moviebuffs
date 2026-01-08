@@ -1,6 +1,8 @@
 package com.sivalabs.moviebuffs.dataimporter.config;
 
 import com.opencsv.exceptions.CsvValidationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.job.parameters.RunIdIncrementer;
@@ -19,6 +21,8 @@ import java.io.IOException;
 @Configuration
 public class BatchConfig {
 
+    private static final Logger log = LoggerFactory.getLogger(BatchConfig.class);
+    
     private final JobRepository jobRepository;
 
     @Value("classpath:/data/movies_metadata_small.csv")
@@ -55,7 +59,7 @@ public class BatchConfig {
     ItemWriter<MovieCsvRecord> writer() {
         return items -> {
             for (MovieCsvRecord record : items) {
-                System.out.println(record);
+                log.info("Movie :{}", record);
             }
         };
     }

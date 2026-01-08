@@ -32,7 +32,7 @@ class UserRestControllerIT extends AbstractIntegrationTest {
 
 	@Test
 	void should_fail_to_create_new_user_with_existing_email() throws Exception {
-		CreateUserRequestDTO createUserRequestDTO = new CreateUserRequestDTO("admin@gmail.com", "secret", "myname");
+		CreateUserRequestDTO createUserRequestDTO = new CreateUserRequestDTO("myname", "admin@gmail.com", "secret");
 
 		this.mockMvc
 			.perform(post("/api/users").contentType(APPLICATION_JSON)

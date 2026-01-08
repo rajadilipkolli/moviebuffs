@@ -4,18 +4,20 @@ import com.opencsv.CSVIterator;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import org.springframework.batch.infrastructure.item.ItemReader;
+import org.springframework.batch.infrastructure.item.ItemStream;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class OpenCsvItemReader implements ItemReader<MovieCsvRecord> {
+public class OpenCsvItemReader implements ItemReader<MovieCsvRecord>, ItemStream {
 
     private final CSVIterator csvIterator;
+    private final CSVReader csvReader;
 
     public OpenCsvItemReader(Resource inputResource, int skipLines) throws IOException, CsvValidationException {
         InputStreamReader inputStreamReader = new InputStreamReader(inputResource.getInputStream());
-        CSVReader csvReader = new CSVReader(inputStreamReader);
+        this.csvReader = new CSVReader(inputStreamReader);
         csvReader.skip(skipLines);
         this.csvIterator = new CSVIterator(csvReader);
     }
@@ -56,5 +58,16 @@ public class OpenCsvItemReader implements ItemReader<MovieCsvRecord> {
                 .voteAverage(nextLine[22])
                 .voteCount(nextLine[23])
                 .build();
+    }
+
+    @Override
+    public void close() {
+        try {
+            if (csvReader != null) {
+                    csvReader.close();
+            }
+        } catch (IOException e) {
+                // log warning
+        }
     }
 }

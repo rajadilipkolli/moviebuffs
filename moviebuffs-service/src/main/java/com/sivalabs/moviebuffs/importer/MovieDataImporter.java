@@ -20,7 +20,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import tools.jackson.core.JacksonException;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
@@ -232,12 +231,12 @@ public class MovieDataImporter {
 			.build();
 	}
 
-	private List<CastMemberRecord> getCastMembers(String castArrayJson) throws JacksonException {
+	private List<CastMemberRecord> getCastMembers(String castArrayJson) {
 		CastMemberRecord[] castMembers = objectMapper.readValue(castArrayJson, CastMemberRecord[].class);
 		return Arrays.asList(castMembers);
 	}
 
-	private List<CrewMemberRecord> getCrewMembers(String crewArrayJson) throws JacksonException {
+	private List<CrewMemberRecord> getCrewMembers(String crewArrayJson) {
 		CrewMemberRecord[] crewMembers = objectMapper.readValue(crewArrayJson, CrewMemberRecord[].class);
 		return Arrays.asList(crewMembers);
 	}

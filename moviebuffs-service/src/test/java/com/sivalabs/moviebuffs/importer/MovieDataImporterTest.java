@@ -1,6 +1,5 @@
 package com.sivalabs.moviebuffs.importer;
 
-import com.opencsv.exceptions.CsvValidationException;
 import com.sivalabs.moviebuffs.core.entity.Genre;
 import com.sivalabs.moviebuffs.core.service.MovieService;
 import com.sivalabs.moviebuffs.importer.mappers.CsvRowMapperUtils;
@@ -9,10 +8,8 @@ import org.junit.jupiter.api.Test;
 import tools.jackson.core.json.JsonReadFeature;
 import tools.jackson.databind.json.JsonMapper;
 
-import java.io.IOException;
-
 import static java.util.Collections.singletonList;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -38,9 +35,8 @@ class MovieDataImporterTest {
 	}
 
 	@Test
-	void should_import_movie_data_successfully() throws IOException, CsvValidationException {
-		movieDataImporter.importData();
-		assertTrue(true);
+	void should_import_movie_data_successfully() {
+		assertDoesNotThrow(() -> movieDataImporter.importData());
 	}
 
 }
