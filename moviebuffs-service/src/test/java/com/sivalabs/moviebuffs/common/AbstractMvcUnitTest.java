@@ -1,6 +1,6 @@
 package com.sivalabs.moviebuffs.common;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import com.sivalabs.moviebuffs.config.security.TokenHelper;
 import com.sivalabs.moviebuffs.core.service.SecurityService;
 import com.sivalabs.moviebuffs.core.utils.Constants;

@@ -21,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,9 +43,10 @@ public class AuthenticationRestController {
 	private final SecurityConfigProperties securityConfigProperties;
 
 	@PostMapping(value = "/login")
-	public AuthenticationResponseDTO createAuthenticationToken(@RequestBody AuthenticationRequestDTO credentials) {
-		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword()));
+	public AuthenticationResponseDTO createAuthenticationToken(
+			@Valid @RequestBody AuthenticationRequestDTO credentials) {
+		Authentication authentication = authenticationManager
+			.authenticate(new UsernamePasswordAuthenticationToken(credentials.username(), credentials.password()));
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 

@@ -1,18 +1,9 @@
 package com.sivalabs.moviebuffs.web.dto;
 
-import lombok.Builder;
-import lombok.Data;
-
 import jakarta.validation.constraints.NotBlank;
 
-@Data
-@Builder
-public class ChangePasswordDTO {
+public record ChangePasswordDTO(@NotBlank(message = "Old password cannot be blank") String oldPassword,
 
-	@NotBlank(message = "Old password cannot be blank")
-	String oldPassword;
-
-	@NotBlank(message = "New password cannot be blank")
-	String newPassword;
+		@NotBlank(message = "New password cannot be blank") String newPassword) {
 
 }

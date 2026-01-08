@@ -1,7 +1,5 @@
 package com.sivalabs.moviebuffs.importer.mappers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sivalabs.moviebuffs.core.entity.CastMember;
 import com.sivalabs.moviebuffs.core.entity.CrewMember;
 import com.sivalabs.moviebuffs.core.entity.Genre;
@@ -12,19 +10,25 @@ import com.sivalabs.moviebuffs.importer.model.MovieCsvRecord;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.math.BigDecimal;
 import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Random;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Arrays;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 @Component
 @RequiredArgsConstructor
 public class CsvRowMapperUtils {
 
-	private final ObjectMapper objectMapper;
+	private final JsonMapper objectMapper;
 
 	private static final Random random = new Random();
 
@@ -32,7 +36,7 @@ public class CsvRowMapperUtils {
 
 	private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
 
-	public Movie mapToMovieEntity(MovieCsvRecord movieCsvRecord) throws JsonProcessingException {
+	public Movie mapToMovieEntity(MovieCsvRecord movieCsvRecord) throws JacksonException {
 		Movie movie = new Movie();
 		movie.setTitle(movieCsvRecord.getTitle());
 		movie.setTmdbId(movieCsvRecord.getId());
@@ -64,7 +68,7 @@ public class CsvRowMapperUtils {
 		return LocalDate.parse(dateString, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 	}
 
-	private Set<Genre> convertToGenres(String genresString) throws JsonProcessingException {
+	private Set<Genre> convertToGenres(String genresString) throws JacksonException {
 		Genre[] genres = objectMapper.readValue(genresString, Genre[].class);
 		for (Genre genre : genres) {
 			genre.setSlug(toSlug(genre.getName()));

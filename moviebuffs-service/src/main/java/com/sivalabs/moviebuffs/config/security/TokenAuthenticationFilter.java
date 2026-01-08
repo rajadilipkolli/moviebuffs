@@ -1,7 +1,7 @@
 package com.sivalabs.moviebuffs.config.security;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

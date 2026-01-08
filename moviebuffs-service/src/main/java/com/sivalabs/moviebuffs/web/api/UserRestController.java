@@ -45,9 +45,9 @@ public class UserRestController {
 	@PostMapping("")
 	@ResponseStatus(CREATED)
 	public UserDTO createUser(@RequestBody @Valid CreateUserRequestDTO createUserRequestDTO) {
-		log.info("process=create_user, user_email={}", createUserRequestDTO.getEmail());
-		UserDTO userDTO = new UserDTO(null, createUserRequestDTO.getName(), createUserRequestDTO.getEmail(),
-				createUserRequestDTO.getPassword(), null);
+		log.info("process=create_user, user_email={}", createUserRequestDTO.email());
+		UserDTO userDTO = new UserDTO(null, createUserRequestDTO.name(), createUserRequestDTO.email(),
+				createUserRequestDTO.password(), null);
 		User user = userDTOMapper.toEntity(userDTO);
 		User savedUser = userService.createUser(user);
 		return userDTOMapper.toDTO(savedUser);
@@ -90,7 +90,7 @@ public class UserRestController {
 		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 		String email = currentUser.getName();
 		log.info("process=change_password, email={}", email);
-		userService.changePassword(email, changePasswordDTO.getOldPassword(), changePasswordDTO.getNewPassword());
+		userService.changePassword(email, changePasswordDTO.oldPassword(), changePasswordDTO.newPassword());
 	}
 
 }

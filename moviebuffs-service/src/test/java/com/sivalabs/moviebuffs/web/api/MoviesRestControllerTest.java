@@ -5,7 +5,7 @@ import com.sivalabs.moviebuffs.core.entity.Movie;
 import com.sivalabs.moviebuffs.core.service.MovieService;
 import com.sivalabs.moviebuffs.web.mappers.MovieDTOMapper;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
