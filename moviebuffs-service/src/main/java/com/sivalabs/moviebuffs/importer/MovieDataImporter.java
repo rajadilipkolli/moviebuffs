@@ -1,7 +1,6 @@
 package com.sivalabs.moviebuffs.importer;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import com.opencsv.CSVIterator;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
@@ -22,6 +21,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import tools.jackson.core.JacksonException;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -227,12 +227,12 @@ public class MovieDataImporter {
 			.build();
 	}
 
-	private List<CastMemberRecord> getCastMembers(String castArrayJson) throws JsonProcessingException {
+	private List<CastMemberRecord> getCastMembers(String castArrayJson) throws JacksonException {
 		CastMemberRecord[] castMembers = objectMapper.readValue(castArrayJson, CastMemberRecord[].class);
 		return Arrays.asList(castMembers);
 	}
 
-	private List<CrewMemberRecord> getCrewMembers(String crewArrayJson) throws JsonProcessingException {
+	private List<CrewMemberRecord> getCrewMembers(String crewArrayJson) throws JacksonException {
 		CrewMemberRecord[] crewMembers = objectMapper.readValue(crewArrayJson, CrewMemberRecord[].class);
 		return Arrays.asList(crewMembers);
 	}

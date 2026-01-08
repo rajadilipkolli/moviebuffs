@@ -3,7 +3,7 @@ package com.sivalabs.moviebuffs.dataimporter.config;
 import com.opencsv.CSVIterator;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
-import org.springframework.batch.item.ItemReader;
+import org.springframework.batch.infrastructure.item.ItemReader;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;

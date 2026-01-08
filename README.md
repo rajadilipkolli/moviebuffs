@@ -1,10 +1,8 @@
 # MovieBuffs
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/rajadilipkolli/moviebuffs)
-
 ## Backend Tech Stack
 * Java
-* SpringBoot 3.x
+* SpringBoot 5.x
 * H2(Dev) / Postgres (Prod)
 * Spring Data JPA
 * Spring Security JWT Authentication
@@ -14,7 +12,7 @@
 * SonarQube
 * Jacoco
 * Maven
-* JUnit 5, Mockito, Testcontainers
+* JUnit 6, Mockito, Testcontainers
 
 ## Frontend Tech Stack
 * ReactJS

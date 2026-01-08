@@ -1,7 +1,7 @@
 package com.sivalabs.moviebuffs.importer;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.ObjectMapper;
 import com.opencsv.exceptions.CsvValidationException;
 import com.sivalabs.moviebuffs.core.entity.Genre;
 import com.sivalabs.moviebuffs.core.service.MovieService;
