@@ -24,7 +24,7 @@ jobs:
         uses: actions/setup-java@v5.7.0
         with:
           java-version: 21
-          distribution: 'adopt'
+          distribution: 'temurin'
           cache: 'maven'
 
       - name: Build with Maven
@@ -43,7 +43,7 @@ jobs:
         uses: actions/setup-java@v5.7.0
         with:
           java-version: 21
-          distribution: 'adopt'
+          distribution: 'temurin'
           cache: 'maven'
       - name: Package with Maven
         run: ./mvnw -B clean install -DskipTests --file pom.xml
