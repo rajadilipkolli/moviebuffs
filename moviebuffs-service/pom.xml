@@ -44,7 +44,7 @@
 		<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 
 		<jacoco-maven-plugin.version>0.8.15</jacoco-maven-plugin.version>
-		<sonar-maven-plugin.version>5.7.0.6970</sonar-maven-plugin.version>
+		<sonar-maven-plugin.version>5.8.0.7211</sonar-maven-plugin.version>
 		<dependency-check-maven.version>13.0.0</dependency-check-maven.version>
 		<heroku-maven-plugin.version>3.0.7</heroku-maven-plugin.version>
 	</properties>
